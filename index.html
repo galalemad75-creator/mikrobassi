@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1A6B3C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ميكروباصي">
+  <meta name="description" content="تطبيق نقل ذكي بسيارات فان 7 راكب في مصر">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>ميكروباصي — نقل ذكي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --primary: #1A6B3C;
+      --primary-dark: #0E4D28;
+      --primary-light: #2ECC71;
+      --accent: #F39C12;
+      --danger: #E74C3C;
+      --bg: #F8FAF9;
+      --card: #FFFFFF;
+      --text: #1A1A2E;
+      --text-secondary: #6B7280;
+      --border: #E5E7EB;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ========== SPLASH SCREEN ========== */
+    .splash-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .splash-screen.hide { opacity: 0; transform: scale(1.1); pointer-events: none; }
+    .splash-logo {
+      width: 120px; height: 120px; border-radius: 30px;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 60px; margin-bottom: 24px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+    .splash-title { color: #fff; font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+    .splash-sub { color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 8px; }
+    .splash-loader { margin-top: 40px; width: 200px; height: 3px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden; }
+    .splash-loader-bar { height: 100%; background: #fff; width: 0; animation: load 2s ease forwards; }
+    @keyframes load { to { width: 100% } }
+
+    /* ========== ONBOARDING ========== */
+    .onboarding {
+      position: fixed; inset: 0; z-index: 9000;
+      background: #fff; display: flex; flex-direction: column;
+    }
+    .onboarding.hidden { display: none; }
+    .onboarding-slides { flex: 1; overflow: hidden; position: relative; }
+    .onboarding-slide {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 40px;
+      opacity: 0; transform: translateX(60px); transition: all 0.5s ease;
+    }
+    .onboarding-slide.active { opacity: 1; transform: translateX(0); }
+    .onboarding-icon { font-size: 80px; margin-bottom: 30px; }
+    .onboarding-slide h2 { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 16px; color: var(--primary-dark); }
+    .onboarding-slide p { font-size: 15px; text-align: center; color: var(--text-secondary); line-height: 1.8; }
+    .onboarding-dots { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
+    .onboarding-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border); transition: all 0.3s;
+    }
+    .onboarding-dots span.active { background: var(--primary); width: 28px; border-radius: 5px; }
+    .onboarding-btn {
+      margin: 0 30px 40px; padding: 16px; background: var(--primary);
+      color: #fff; border: none; border-radius: var(--radius);
+      font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .onboarding-btn:active { transform: scale(0.97); }
+    .onboarding-skip {
+      position: absolute; top: 20px; left: 20px; background: none; border: none;
+      color: var(--text-secondary); font-family: 'Cairo'; font-size: 14px; cursor: pointer;
+    }
+
+    /* ========== APP SHELL ========== */
+    .app { display: none; flex-direction: column; height: 100vh; }
+    .app.show { display: flex; }
+
+    /* Header */
+    .app-header {
+      background: #fff; padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); z-index: 100;
+      position: relative;
+    }
+    .header-brand { display: flex; align-items: center; gap: 10px; }
+    .header-brand span { font-size: 28px; }
+    .header-brand h1 { font-size: 18px; font-weight: 800; color: var(--primary); }
+    .header-actions { display: flex; gap: 8px; }
+    .header-btn {
+      width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border);
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; cursor: pointer; transition: all 0.2s;
+      position: relative;
+    }
+    .header-btn:active { transform: scale(0.92); }
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px; width: 18px; height: 18px;
+      background: var(--danger); color: #fff; border-radius: 50%;
+      font-size: 10px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+    }
+
+    /* Map Container */
+    .map-container { flex: 1; position: relative; }
+    #map { width: 100%; height: 100%; }
+
+    /* Search Bar Overlay */
+    .search-overlay {
+      position: absolute; top: 16px; right: 16px; left: 16px; z-index: 500;
+    }
+    .search-bar {
+      background: #fff; border-radius: var(--radius); padding: 14px 18px;
+      box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .search-bar:active { transform: scale(0.98); }
+    .search-bar .icon { font-size: 20px; color: var(--primary); }
+    .search-bar .text { color: var(--text-secondary); font-size: 15px; flex: 1; }
+    .search-bar .voice {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--primary); color: #fff; border: none;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; cursor: pointer;
+    }
+
+    /* Bottom Sheet */
+    .bottom-sheet {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 500;
+      background: #fff; border-radius: 24px 24px 0 0;
+      box-shadow: 0 -4px 30px rgba(0,0,0,0.12);
+      transform: translateY(calc(100% - 100px));
+      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+      max-height: 75vh; overflow-y: auto;
+    }
+    .bottom-sheet.expanded { transform: translateY(0); }
+    .sheet-handle {
+      width: 40px; height: 4px; background: var(--border);
+      border-radius: 2px; margin: 12px auto;
+    }
+    .sheet-content { padding: 0 20px 30px; }
+
+    /* Quick Actions */
+    .quick-actions { display: flex; gap: 12px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
+    .quick-action {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      min-width: 80px; padding: 14px 10px; background: var(--bg);
+      border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .quick-action:active { border-color: var(--primary); background: #E8F5E9; }
+    .quick-action .emoji { font-size: 28px; }
+    .quick-action .label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-align: center; }
+
+    /* Recent Rides */
+    .section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .ride-card {
+      display: flex; align-items: center; gap: 14px; padding: 14px;
+      background: var(--bg); border-radius: var(--radius-sm); margin-bottom: 10px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .ride-card:active { background: #E8F5E9; }
+    .ride-icon { font-size: 24px; width: 44px; height: 44px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .ride-info { flex: 1; }
+    .ride-dest { font-size: 14px; font-weight: 600; }
+    .ride-meta { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+    .ride-price { font-size: 14px; font-weight: 700; color: var(--primary); }
+
+    /* ========== SCREENS (Modals) ========== */
+    .screen {
+      position: fixed; inset: 0; z-index: 2000;
+      background: var(--bg); display: none; flex-direction: column;
+      overflow-y: auto;
+    }
+    .screen.show { display: flex; }
+
+    /* Screen Header */
+    .screen-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px; background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .back-btn {
+      width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border);
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; cursor: pointer; font-family: 'Cairo';
+    }
+    .screen-header h2 { font-size: 18px; font-weight: 700; }
+
+    /* ========== LOGIN SCREEN ========== */
+    .login-screen {
+      background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+      align-items: center; justify-content: center; padding: 30px;
+    }
+    .login-logo { font-size: 80px; margin-bottom: 16px; }
+    .login-title { color: #fff; font-size: 28px; font-weight: 800; text-align: center; }
+    .login-sub { color: rgba(255,255,255,0.7); text-align: center; margin-top: 8px; font-size: 14px; }
+    .login-card {
+      background: #fff; border-radius: 20px; padding: 30px;
+      width: 100%; max-width: 400px; margin-top: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .login-card h3 { font-size: 18px; margin-bottom: 20px; text-align: center; }
+    .phone-input-wrap {
+      display: flex; align-items: center; gap: 10px; background: var(--bg);
+      border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 20px;
+      border: 2px solid transparent; transition: border-color 0.2s;
+    }
+    .phone-input-wrap:focus-within { border-color: var(--primary); }
+    .phone-prefix { font-size: 15px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+    .phone-input {
+      flex: 1; border: none; background: none; font-family: 'Cairo';
+      font-size: 16px; outline: none; direction: ltr; text-align: left;
+    }
+    .login-btn {
+      width: 100%; padding: 16px; background: var(--primary); color: #fff;
+      border: none; border-radius: var(--radius-sm); font-family: 'Cairo';
+      font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .login-btn:active { transform: scale(0.97); }
+    .login-btn:disabled { background: #ccc; cursor: not-allowed; }
+    .login-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; color: var(--text-secondary); font-size: 13px; }
+    .login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .social-login { display: flex; gap: 12px; }
+    .social-btn {
+      flex: 1; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: #fff; font-size: 22px; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.2s;
+    }
+    .social-btn:active { background: var(--bg); }
+    .login-terms { text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-secondary); line-height: 1.8; }
+    .login-terms a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+    /* ========== OTP SCREEN ========== */
+    .otp-screen { background: #fff; }
+    .otp-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
+    .otp-icon { font-size: 70px; margin-bottom: 20px; }
+    .otp-title { font-size: 22px; font-weight: 700; text-align: center; }
+    .otp-phone { color: var(--primary); font-weight: 700; direction: ltr; }
+    .otp-sub { color: var(--text-secondary); text-align: center; margin-top: 8px; font-size: 14px; }
+    .otp-inputs {
+      display: flex; gap: 12px; margin: 30px 0; justify-content: center;
+    }
+    .otp-input {
+      width: 52px; height: 60px; border: 2px solid var(--border); border-radius: 14px;
+      text-align: center; font-family: 'Cairo'; font-size: 24px; font-weight: 700;
+      outline: none; transition: all 0.2s; direction: ltr;
+    }
+    .otp-input:focus { border-color: var(--primary); background: #E8F5E9; }
+    .otp-timer { color: var(--text-secondary); font-size: 14px; margin-bottom: 20px; }
+    .otp-resend { color: var(--primary); background: none; border: none; font-family: 'Cairo'; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .otp-verify {
+      width: 100%; max-width: 300px; padding: 16px; background: var(--primary);
+      color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'Cairo';
+      font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .otp-verify:active { transform: scale(0.97); }
+
+    /* ========== BOOKING SCREEN ========== */
+    .booking-content { padding: 20px; flex: 1; }
+    .location-inputs { background: #fff; border-radius: var(--radius); padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); }
+    .loc-input {
+      display: flex; align-items: center; gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .loc-input:last-child { border-bottom: none; }
+    .loc-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .loc-dot.pickup { background: var(--primary); box-shadow: 0 0 0 4px rgba(26,107,60,0.2); }
+    .loc-dot.dropoff { background: var(--danger); box-shadow: 0 0 0 4px rgba(231,76,60,0.2); }
+    .loc-field {
+      flex: 1; border: none; font-family: 'Cairo'; font-size: 15px;
+      outline: none; background: none;
+    }
+    .loc-field::placeholder { color: #bbb; }
+
+    .car-selector { display: flex; gap: 12px; margin-bottom: 16px; }
+    .car-option {
+      flex: 1; background: #fff; border: 2px solid var(--border); border-radius: var(--radius);
+      padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;
+    }
+    .car-option.selected { border-color: var(--primary); background: #E8F5E9; }
+    .car-option .car-emoji { font-size: 36px; margin-bottom: 8px; }
+    .car-option .car-name { font-size: 14px; font-weight: 700; }
+    .car-option .car-price { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+    .car-option .car-time { font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 4px; }
+
+    .passenger-counter {
+      background: #fff; border-radius: var(--radius); padding: 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; box-shadow: var(--shadow);
+    }
+    .passenger-label { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .counter-controls { display: flex; align-items: center; gap: 16px; }
+    .counter-btn {
+      width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--primary);
+      background: #fff; color: var(--primary); font-size: 20px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: all 0.2s; font-family: 'Cairo';
+    }
+    .counter-btn:active { background: var(--primary); color: #fff; }
+    .counter-btn:disabled { border-color: #ddd; color: #ddd; cursor: not-allowed; }
+    .counter-value { font-size: 22px; font-weight: 800; min-width: 30px; text-align: center; }
+
+    .family-toggle {
+      background: #fff; border-radius: var(--radius); padding: 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; box-shadow: var(--shadow);
+    }
+    .family-info { display: flex; align-items: center; gap: 10px; }
+    .family-info .emoji { font-size: 24px; }
+    .family-info .text h4 { font-size: 14px; font-weight: 700; }
+    .family-info .text p { font-size: 12px; color: var(--text-secondary); }
+    .toggle {
+      width: 52px; height: 28px; background: #ddd; border-radius: 14px;
+      position: relative; cursor: pointer; transition: all 0.3s;
+    }
+    .toggle.on { background: var(--primary); }
+    .toggle::after {
+      content: ''; position: absolute; top: 3px; right: 3px;
+      width: 22px; height: 22px; background: #fff; border-radius: 50%;
+      transition: all 0.3s; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .toggle.on::after { right: 27px; }
+
+    .fare-preview {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: var(--radius); padding: 20px; color: #fff; margin-bottom: 16px;
+    }
+    .fare-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; opacity: 0.9; }
+    .fare-total { display: flex; justify-content: space-between; font-size: 22px; font-weight: 800; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); }
+    .fare-note { font-size: 11px; opacity: 0.7; text-align: center; margin-top: 10px; }
+
+    .book-btn {
+      width: 100%; padding: 18px; background: var(--primary); color: #fff;
+      border: none; border-radius: var(--radius); font-family: 'Cairo';
+      font-size: 17px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 8px 20px rgba(26,107,60,0.3);
+    }
+    .book-btn:active { transform: scale(0.97); }
+
+    /* ========== TRACKING SCREEN ========== */
+    .tracking-map { flex: 1; position: relative; }
+    .tracking-map #trackingMap { width: 100%; height: 100%; }
+    .tracking-bottom {
+      background: #fff; border-radius: 24px 24px 0 0; padding: 20px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    }
+    .driver-info-card {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .driver-avatar {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: var(--primary); display: flex; align-items: center;
+      justify-content: center; font-size: 28px;
+    }
+    .driver-details { flex: 1; }
+    .driver-details h3 { font-size: 16px; font-weight: 700; }
+    .driver-details .car-info { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+    .driver-rating { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--accent); font-weight: 600; }
+    .driver-actions { display: flex; gap: 10px; }
+    .driver-action-btn {
+      width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border);
+      background: #fff; font-size: 18px; display: flex; align-items: center;
+      justify-content: center; cursor: pointer;
+    }
+
+    .trip-status-bar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px; background: #E8F5E9; border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+    }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--primary); animation: blink 1.5s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .status-text { font-size: 14px; font-weight: 600; flex: 1; }
+    .status-time { font-size: 13px; color: var(--primary); font-weight: 700; }
+
+    .trip-actions { display: flex; gap: 10px; }
+    .trip-action {
+      flex: 1; padding: 14px; border-radius: var(--radius-sm); border: none;
+      font-family: 'Cairo'; font-size: 14px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.2s;
+    }
+    .trip-action.share { background: #E8F5E9; color: var(--primary); }
+    .trip-action.emergency { background: #FDEDEC; color: var(--danger); }
+    .trip-action:active { transform: scale(0.97); }
+
+    /* ========== TRIP SUMMARY ========== */
+    .summary-content { padding: 20px; }
+    .summary-card {
+      background: #fff; border-radius: var(--radius); padding: 24px;
+      text-align: center; margin-bottom: 16px; box-shadow: var(--shadow);
+    }
+    .summary-icon { font-size: 60px; margin-bottom: 12px; }
+    .summary-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .summary-amount { font-size: 36px; font-weight: 900; color: var(--primary); margin: 16px 0; }
+    .summary-details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .summary-detail {
+      background: var(--bg); border-radius: var(--radius-sm); padding: 12px;
+      text-align: center;
+    }
+    .summary-detail .label { font-size: 12px; color: var(--text-secondary); }
+    .summary-detail .value { font-size: 16px; font-weight: 700; margin-top: 4px; }
+
+    .rating-section { background: #fff; border-radius: var(--radius); padding: 24px; text-align: center; margin-bottom: 16px; box-shadow: var(--shadow); }
+    .rating-section h3 { margin-bottom: 16px; }
+    .rating-stars { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+    .star {
+      font-size: 36px; cursor: pointer; transition: all 0.2s;
+      filter: grayscale(1) opacity(0.3);
+    }
+    .star.active { filter: none; transform: scale(1.1); }
+    .rating-comment {
+      width: 100%; padding: 14px; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); font-family: 'Cairo'; font-size: 14px;
+      resize: none; height: 80px; outline: none;
+    }
+    .rating-comment:focus { border-color: var(--primary); }
+
+    .done-btn {
+      width: 100%; padding: 18px; background: var(--primary); color: #fff;
+      border: none; border-radius: var(--radius); font-family: 'Cairo';
+      font-size: 17px; font-weight: 700; cursor: pointer;
+    }
+
+    /* ========== PROFILE SCREEN ========== */
+    .profile-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 30px 20px; text-align: center; color: #fff;
+    }
+    .profile-avatar {
+      width: 80px; height: 80px; border-radius: 24px;
+      background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
+      margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 40px; border: 3px solid rgba(255,255,255,0.3);
+    }
+    .profile-name { font-size: 20px; font-weight: 700; }
+    .profile-phone { font-size: 14px; opacity: 0.8; margin-top: 4px; direction: ltr; }
+    .profile-stats {
+      display: flex; gap: 12px; margin-top: 20px;
+    }
+    .stat-item {
+      flex: 1; background: rgba(255,255,255,0.15); border-radius: var(--radius-sm);
+      padding: 12px; backdrop-filter: blur(10px);
+    }
+    .stat-item .num { font-size: 20px; font-weight: 800; }
+    .stat-item .lbl { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+    .profile-menu { padding: 20px; }
+    .menu-item {
+      display: flex; align-items: center; gap: 14px; padding: 16px;
+      background: #fff; border-radius: var(--radius-sm); margin-bottom: 8px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .menu-item:active { background: var(--bg); }
+    .menu-icon { font-size: 22px; width: 44px; height: 44px; background: var(--bg); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .menu-text { flex: 1; font-size: 15px; font-weight: 600; }
+    .menu-arrow { color: var(--text-secondary); font-size: 18px; }
+    .menu-item.danger .menu-text { color: var(--danger); }
+
+    /* ========== BOTTOM NAV ========== */
+    .bottom-nav {
+      background: #fff; display: flex; padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.06); z-index: 100;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 4px; padding: 8px; cursor: pointer; transition: all 0.2s;
+      border: none; background: none; font-family: 'Cairo';
+    }
+    .nav-item .icon { font-size: 24px; transition: all 0.2s; }
+    .nav-item .label { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
+    .nav-item.active .icon { transform: scale(1.15); }
+    .nav-item.active .label { color: var(--primary); font-weight: 700; }
+
+    /* ========== TRIPS LIST ========== */
+    .trips-list { padding: 20px; }
+    .trip-card {
+      background: #fff; border-radius: var(--radius); padding: 16px;
+      margin-bottom: 12px; box-shadow: var(--shadow); cursor: pointer;
+    }
+    .trip-card:active { transform: scale(0.98); }
+    .trip-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .trip-date { font-size: 12px; color: var(--text-secondary); }
+    .trip-status { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    .trip-status.completed { background: #E8F5E9; color: var(--primary); }
+    .trip-status.cancelled { background: #FDEDEC; color: var(--danger); }
+    .trip-route { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .route-dots { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .route-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .route-line { width: 2px; height: 20px; background: var(--border); }
+    .route-addresses { flex: 1; }
+    .route-addr { font-size: 13px; }
+    .route-addr.from { color: var(--text-secondary); }
+    .route-addr.to { font-weight: 600; margin-top: 6px; }
+    .trip-card-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-secondary); }
+    .trip-card-price { font-weight: 700; color: var(--primary); font-size: 16px; }
+
+    /* ========== SAFETY SCREEN ========== */
+    .safety-content { padding: 20px; }
+    .safety-card {
+      background: #fff; border-radius: var(--radius); padding: 20px;
+      margin-bottom: 12px; box-shadow: var(--shadow);
+    }
+    .safety-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .safety-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+    .safety-contacts { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .contact-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px;
+      background: var(--bg); border-radius: var(--radius-sm);
+    }
+    .contact-item .emoji { font-size: 20px; }
+    .contact-item .info { flex: 1; }
+    .contact-item .name { font-size: 14px; font-weight: 600; }
+    .contact-item .phone { font-size: 12px; color: var(--text-secondary); direction: ltr; }
+    .add-contact-btn {
+      width: 100%; padding: 14px; border: 2px dashed var(--border);
+      border-radius: var(--radius-sm); background: none; font-family: 'Cairo';
+      font-size: 14px; color: var(--text-secondary); cursor: pointer;
+    }
+
+    /* ========== TOAST ========== */
+    .toast {
+      position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--text); color: #fff; padding: 14px 24px; border-radius: 12px;
+      font-family: 'Cairo'; font-size: 14px; font-weight: 600; z-index: 9999;
+      opacity: 0; transition: all 0.3s ease; pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .animate-slide-up { animation: slideUp 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
+    .animate-fade-in { animation: fadeIn 0.3s ease; }
+
+    /* Loading spinner */
+    .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 40px 20px; }
+    .empty-state .emoji { font-size: 48px; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 16px; margin-bottom: 8px; }
+    .empty-state p { font-size: 13px; color: var(--text-secondary); }
+
+    /* Leaflet overrides for RTL */
+    .leaflet-control-zoom { left: auto !important; right: 10px !important; }
+    .leaflet-control-attribution { direction: ltr; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== SPLASH SCREEN ===== -->
+  <div class="splash-screen" id="splash">
+    <div class="splash-logo">🚐</div>
+    <div class="splash-title">ميكروباصي</div>
+    <div class="splash-sub">نقل ذكي • مصر</div>
+    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+  </div>
+
+  <!-- ===== ONBOARDING ===== -->
+  <div class="onboarding hidden" id="onboarding">
+    <button class="onboarding-skip" onclick="skipOnboarding()">تخطي</button>
+    <div class="onboarding-slides">
+      <div class="onboarding-slide active" data-slide="0">
+        <div class="onboarding-icon">🚐</div>
+        <h2>رحلات الفان بأسهل طريقة</h2>
+        <p>احجز سيارتك الفان في أي وقت وأي مكان في مصر. سوزوكي أو شيفروليه — على كيفك</p>
+      </div>
+      <div class="onboarding-slide" data-slide="1">
+        <div class="onboarding-icon">👨‍👩‍👧‍👦</div>
+        <h2>وضع العائلة</h2>
+        <p>سافر مع عيلتك بأمان. نضمن لك رحلة مريحة وخاصة مع خيار مشاركة بيانات الرحلة مع أحبابك</p>
+      </div>
+      <div class="onboarding-slide" data-slide="2">
+        <div class="onboarding-icon">💰</div>
+        <h2>أسعار عادلة وشفافة</h2>
+        <p>تعرف كم تدفع قبل ما تطلب. أسعار واضحة بدون مفاجآت — فتحة عداد + سعر الكيلومتر</p>
+      </div>
+      <div class="onboarding-slide" data-slide="3">
+        <div class="onboarding-icon">🛡️</div>
+        <h2>أمانك أولويتنا</h2>
+        <p>زر طوارئ مباشر، مشاركة موقعك في الوقت الفعلي، وسائقين موثوقين ومتحققين</p>
+      </div>
+    </div>
+    <div class="onboarding-dots" id="onboardingDots">
+      <span class="active"></span><span></span><span></span><span></span>
+    </div>
+    <button class="onboarding-btn" id="onboardingBtn" onclick="nextOnboarding()">التالي</button>
+  </div>
+
+  <!-- ===== LOGIN SCREEN ===== -->
+  <div class="screen login-screen" id="loginScreen">
+    <div class="login-logo">🚐</div>
+    <div class="login-title">ميكروباصي</div>
+    <div class="login-sub">نقل ذكي بسيارات فان في مصر</div>
+    <div class="login-card">
+      <h3>تسجيل الدخول</h3>
+      <div class="phone-input-wrap">
+        <span class="phone-prefix">🇪🇬 +20</span>
+        <input type="tel" class="phone-input" id="phoneInput" placeholder="10 1234 5678" maxlength="11" inputmode="numeric">
+      </div>
+      <button class="login-btn" id="loginBtn" onclick="sendOTP()">إرسال رمز التحقق</button>
+      <div class="login-divider">أو سجل بـ</div>
+      <div class="social-login">
+        <button class="social-btn" onclick="socialLogin('google')">G</button>
+        <button class="social-btn" onclick="socialLogin('apple')">🍎</button>
+        <button class="social-btn" onclick="socialLogin('facebook')">f</button>
+      </div>
+      <div class="login-terms">
+        بالتسجيل أنت توافق على <a href="#" onclick="showScreen('termsScreen')">شروط الاستخدام</a>
+        و <a href="#" onclick="showScreen('privacyScreen')">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== OTP SCREEN ===== -->
+  <div class="screen otp-screen" id="otpScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="showScreen('loginScreen')">→</button>
+      <h2>رمز التحقق</h2>
+    </div>
+    <div class="otp-content">
+      <div class="otp-icon">📱</div>
+      <div class="otp-title">أدخل رمز التحقق</div>
+      <div class="otp-sub">أرسلنا رمز لـ <span class="otp-phone" id="otpPhone">+20 10 1234 5678</span></div>
+      <div class="otp-inputs">
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="0">
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="1">
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="2">
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="3">
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="4">
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="5">
+      </div>
+      <div class="otp-timer" id="otpTimer">إعادة الإرسال بعد 0:30</div>
+      <button class="otp-resend" id="resendBtn" onclick="resendOTP()" style="display:none">إعادة إرسال الرمز</button>
+      <button class="otp-verify" onclick="verifyOTP()">تحقق</button>
+    </div>
+  </div>
+
+  <!-- ===== TERMS SCREEN ===== -->
+  <div class="screen" id="termsScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>شروط الاستخدام</h2>
+    </div>
+    <div class="safety-content">
+      <div class="safety-card">
+        <h3>📋 شروط الاستخدام — ميكروباصي</h3>
+        <p>
+          <strong>آخر تحديث:</strong> مارس 2026<br><br>
+          <strong>1. القبول:</strong> باستخدام التطبيق، توافق على هذه الشروط بالكامل.<br><br>
+          <strong>2. الخدمة:</strong> ميكروباصي يوفر خدمة نقل عبر سيارات فان. نحن وسيط بين الراكب والسائق وليست لدينا ملكية للمركبات.<br><br>
+          <strong>3. الحساب:</strong> يجب أن يكون عمرك 18 سنة على الأقل. رقم الهاتف مطلوب للتحقق.<br><br>
+          <strong>4. الأجرة:</strong> يتم حساب الأجرة بناءً على المسافة والوقت. الأسعار معروضة قبل التأكيد.<br><br>
+          <strong>5. الإلغاء:</strong> الإلغاء المجاني خلال دقيقتين. بعد ذلك قد تُفرض رسوم إلغاء.<br><br>
+          <strong>6. السلوك:</strong> يُمنع التدخين أثناء الرحلة. يُمنع إيذاء السائق أو الراكب.<br><br>
+          <strong>7. المسؤولية:</strong> ميكروباصي غير مسؤول عن تصرفات السائقين ولكن يلتزم بفحص المستندات وتقييم السائقين.<br><br>
+          <strong>8. الخصوصية:</strong> نحمي بياناتك وفقاً لسياسة الخصوصية الخاصة بنا.<br><br>
+          <strong>9. التعديل:</strong> قد نعدّل الشروط في أي وقت مع إشعار مسبق.<br><br>
+          <strong>10. القانون:</strong> تخضع هذه الشروط لقوانين جمهورية مصر العربية.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PRIVACY SCREEN ===== -->
+  <div class="screen" id="privacyScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>سياسة الخصوصية</h2>
+    </div>
+    <div class="safety-content">
+      <div class="safety-card">
+        <h3>🔒 سياسة الخصوصية — ميكروباصي</h3>
+        <p>
+          <strong>آخر تحديث:</strong> مارس 2026<br><br>
+          <strong>البيانات التي نجمعها:</strong><br>
+          • رقم الهاتف (للتحقق والدخول)<br>
+          • الموقع الجغرافي (أثناء الرحلة فقط)<br>
+          • تقييمات الرحلات والتعليقات<br>
+          • بيانات الاستخدام العامة<br><br>
+          <strong>كيف نستخدم البيانات:</strong><br>
+          • تحسين جودة الخدمة والمطابقة بين السائقين والركاب<br>
+          • إرسال إشعارات الرحلة والتحديثات<br>
+          • تحليل الأداء وتحسين التجربة<br><br>
+          <strong>حماية البيانات:</strong><br>
+          • بياناتك مشفرة ومحمية عبر Firebase<br>
+          • لا نشارك بياناتك مع أطراف ثالثة<br>
+          • يمكنك طلب حذف بياناتك في أي وقت<br>
+          • نستخدم HTTPS لجميع الاتصالات<br><br>
+          <strong>حقوقك:</strong><br>
+          • حق الوصول لبياناتك<br>
+          • حق تعديل أو حذف بياناتك<br>
+          • حق سحب الموافقة<br><br>
+          <strong>للتواصل:</strong> privacy@mikrobassi.com
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SAFETY SCREEN ===== -->
+  <div class="screen" id="safetyScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>🛡️ الأمان والطوارئ</h2>
+    </div>
+    <div class="safety-content">
+      <button class="book-btn" style="background:var(--danger);margin-bottom:20px" onclick="callEmergency()">
+        🆘 زر الطوارئ — اتصل بالنجدة
+      </button>
+      <div class="safety-card">
+        <h3>📍 مشاركة الموقع</h3>
+        <p>شارك موقع رحلتك في الوقت الفعلي مع أشخاص تثق فيهم</p>
+        <div class="safety-contacts" id="emergencyContacts">
+          <div class="contact-item">
+            <span class="emoji">👤</span>
+            <div class="info">
+              <div class="name">أحمد محمد</div>
+              <div class="phone">+20 10 000 0000</div>
+            </div>
+          </div>
+        </div>
+        <button class="add-contact-btn" onclick="addEmergencyContact()">+ إضافة جهة اتصال طوارئ</button>
+      </div>
+      <div class="safety-card">
+        <h3>🛡️ نصائح الأمان</h3>
+        <p>
+          • تحقق من رقم اللوحة قبل الركوب<br>
+          • شارك بيانات رحلتك مع عائلتك<br>
+          • استخدم زر الطوارئ في أي حالة خطر<br>
+          • لا تشارك معلوماتك الشخصية مع السائق<br>
+          • تأكد من وجهتك على الخريطة
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PROFILE SCREEN ===== -->
+  <div class="screen" id="profileScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>حسابي</h2>
+    </div>
+    <div style="flex:1;overflow-y:auto">
+      <div class="profile-header">
+        <div class="profile-avatar">👤</div>
+        <div class="profile-name">مستخدم ميكروباصي</div>
+        <div class="profile-phone">+20 10 1234 5678</div>
+        <div class="profile-stats">
+          <div class="stat-item"><div class="num">12</div><div class="lbl">رحلة</div></div>
+          <div class="stat-item"><div class="num">4.8⭐</div><div class="lbl">تقييم</div></div>
+          <div class="stat-item"><div class="num">🥉</div><div class="lbl">مستوى</div></div>
+        </div>
+      </div>
+      <div class="profile-menu">
+        <div class="menu-item" onclick="showScreen('tripsListScreen')">
+          <div class="menu-icon">📋</div>
+          <div class="menu-text">رحلاتي</div>
+          <div class="menu-arrow">←</div>
+        </div>
+        <div class="menu-item" onclick="showScreen('safetyScreen')">
+          <div class="menu-icon">🛡️</div>
+          <div class="menu-text">الأمان والطوارئ</div>
+          <div class="menu-arrow">←</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-icon">💳</div>
+          <div class="menu-text">طرق الدفع</div>
+          <div class="menu-arrow">←</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-icon">🎁</div>
+          <div class="menu-text">العروض والقسائم</div>
+          <div class="menu-arrow">←</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-icon">⚙️</div>
+          <div class="menu-text">الإعدادات</div>
+          <div class="menu-arrow">←</div>
+        </div>
+        <div class="menu-item" onclick="showScreen('termsScreen')">
+          <div class="menu-icon">📋</div>
+          <div class="menu-text">شروط الاستخدام</div>
+          <div class="menu-arrow">←</div>
+        </div>
+        <div class="menu-item" onclick="showScreen('privacyScreen')">
+          <div class="menu-icon">🔒</div>
+          <div class="menu-text">سياسة الخصوصية</div>
+          <div class="menu-arrow">←</div>
+        </div>
+        <div class="menu-item" style="margin-top:20px">
+          <div class="menu-icon">ℹ️</div>
+          <div class="menu-text">عن ميكروباصي v1.0.0</div>
+          <div class="menu-arrow">←</div>
+        </div>
+        <div class="menu-item danger" onclick="logout()">
+          <div class="menu-icon">🚪</div>
+          <div class="menu-text">تسجيل الخروج</div>
+          <div class="menu-arrow">←</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TRIPS LIST SCREEN ===== -->
+  <div class="screen" id="tripsListScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>رحلاتي</h2>
+    </div>
+    <div class="trips-list" id="tripsList">
+      <div class="trip-card" onclick="showScreen('summaryScreen')">
+        <div class="trip-card-top">
+          <span class="trip-date">2 أبريل 2026 • 8:30 ص</span>
+          <span class="trip-status completed">مكتملة</span>
+        </div>
+        <div class="trip-route">
+          <div class="route-dots">
+            <div class="route-dot" style="background:var(--primary)"></div>
+            <div class="route-line"></div>
+            <div class="route-dot" style="background:var(--danger)"></div>
+          </div>
+          <div class="route-addresses">
+            <div class="route-addr from">ميدان التحرير</div>
+            <div class="route-addr to">مدينة نصر — شارع عباس العقاد</div>
+          </div>
+        </div>
+        <div class="trip-card-bottom">
+          <span>🚐 سوزوكي • 25 دقيقة</span>
+          <span class="trip-card-price">85 ج</span>
+        </div>
+      </div>
+      <div class="trip-card">
+        <div class="trip-card-top">
+          <span class="trip-date">1 أبريل 2026 • 6:00 م</span>
+          <span class="trip-status completed">مكتملة</span>
+        </div>
+        <div class="trip-route">
+          <div class="route-dots">
+            <div class="route-dot" style="background:var(--primary)"></div>
+            <div class="route-line"></div>
+            <div class="route-dot" style="background:var(--danger)"></div>
+          </div>
+          <div class="route-addresses">
+            <div class="route-addr from">المعادي</div>
+            <div class="route-addr to">الزمالك — شارع 26 يوليو</div>
+          </div>
+        </div>
+        <div class="trip-card-bottom">
+          <span>🚗 شيفروليه • 35 دقيقة</span>
+          <span class="trip-card-price">120 ج</span>
+        </div>
+      </div>
+      <div class="trip-card">
+        <div class="trip-card-top">
+          <span class="trip-date">30 مارس 2026 • 9:00 ص</span>
+          <span class="trip-status cancelled">ملغاة</span>
+        </div>
+        <div class="trip-route">
+          <div class="route-dots">
+            <div class="route-dot" style="background:var(--primary)"></div>
+            <div class="route-line"></div>
+            <div class="route-dot" style="background:var(--danger)"></div>
+          </div>
+          <div class="route-addresses">
+            <div class="route-addr from">الدقي</div>
+            <div class="route-addr to">المهندسين — شارع جامعة الدول</div>
+          </div>
+        </div>
+        <div class="trip-card-bottom">
+          <span>🚐 سوزوكي</span>
+          <span class="trip-card-price" style="color:var(--danger)">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BOOKING SCREEN ===== -->
+  <div class="screen" id="bookingScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>🚐 حجز رحلة</h2>
+    </div>
+    <div class="booking-content">
+      <div class="location-inputs">
+        <div class="loc-input">
+          <div class="loc-dot pickup"></div>
+          <input type="text" class="loc-field" placeholder="موقع الانطلاق" value="ميدان التحرير">
+        </div>
+        <div class="loc-input">
+          <div class="loc-dot dropoff"></div>
+          <input type="text" class="loc-field" placeholder="إلى أين؟" id="destinationInput">
+        </div>
+      </div>
+
+      <div class="section-title">🚐 اختر السيارة</div>
+      <div class="car-selector">
+        <div class="car-option selected" data-car="suzuki" onclick="selectCar(this)">
+          <div class="car-emoji">🚐</div>
+          <div class="car-name">سوزوكي</div>
+          <div class="car-price">20ج + 13ج/كم</div>
+          <div class="car-time">🕐 متاح خلال 3 دقائق</div>
+        </div>
+        <div class="car-option" data-car="chevrolet" onclick="selectCar(this)">
+          <div class="car-emoji">🚗</div>
+          <div class="car-name">شيفروليه</div>
+          <div class="car-price">30ج + 16ج/كم</div>
+          <div class="car-time">🕐 متاح خلال 5 دقائق</div>
+        </div>
+      </div>
+
+      <div class="passenger-counter">
+        <div class="passenger-label">👥 عدد الركاب</div>
+        <div class="counter-controls">
+          <button class="counter-btn" id="minusBtn" onclick="changePassenger(-1)" disabled>−</button>
+          <span class="counter-value" id="passengerCount">1</span>
+          <button class="counter-btn" id="plusBtn" onclick="changePassenger(1)">+</button>
+        </div>
+      </div>
+
+      <div class="family-toggle">
+        <div class="family-info">
+          <span class="emoji">👨‍👩‍👧‍👦</span>
+          <div class="text">
+            <h4>وضع العائلة</h4>
+            <p>رحلة خاصة ومريحة</p>
+          </div>
+        </div>
+        <div class="toggle" id="familyToggle" onclick="toggleFamily()"></div>
+      </div>
+
+      <div class="fare-preview" id="farePreview">
+        <div class="fare-row"><span>فتحة العداد</span><span id="fareBase">20 ج</span></div>
+        <div class="fare-row"><span>المسافة (~12 كم)</span><span id="fareDistance">156 ج</span></div>
+        <div class="fare-row"><span>الوقت (~20 دقيقة)</span><span id="fareTime">40 ج</span></div>
+        <div class="fare-total"><span>الإجمالي المتوقع</span><span id="fareTotal">216 ج</span></div>
+        <div class="fare-note">💡 السعر قد يتغير بناءً على المسار الفعلي</div>
+      </div>
+
+      <button class="book-btn" onclick="confirmBooking()">🚐 تأكيد الطلب</button>
+    </div>
+  </div>
+
+  <!-- ===== TRACKING SCREEN ===== -->
+  <div class="screen" id="trackingScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>رحلة جارية</h2>
+    </div>
+    <div class="tracking-map">
+      <div id="trackingMap"></div>
+    </div>
+    <div class="tracking-bottom">
+      <div class="driver-info-card">
+        <div class="driver-avatar">👨</div>
+        <div class="driver-details">
+          <h3>محمد علي</h3>
+          <div class="car-info">🚐 سوزوكي أبيض — أ ب ج 1234</div>
+          <div class="driver-rating">⭐ 4.9 (142 رحلة)</div>
+        </div>
+        <div class="driver-actions">
+          <button class="driver-action-btn" onclick="callDriver()">📞</button>
+          <button class="driver-action-btn" onclick="chatDriver()">💬</button>
+        </div>
+      </div>
+      <div class="trip-status-bar">
+        <div class="status-dot"></div>
+        <div class="status-text" id="tripStatusText">السائق في طريقه إليك</div>
+        <div class="status-time" id="tripETA">3 دقائق</div>
+      </div>
+      <div class="trip-actions">
+        <button class="trip-action share" onclick="shareTrip()">📤 مشاركة الرحلة</button>
+        <button class="trip-action emergency" onclick="callEmergency()">🆘 طوارئ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUMMARY SCREEN ===== -->
+  <div class="screen" id="summaryScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>ملخص الرحلة</h2>
+    </div>
+    <div class="summary-content">
+      <div class="summary-card">
+        <div class="summary-icon">✅</div>
+        <div class="summary-title">تمت الرحلة بنجاح!</div>
+        <div class="summary-amount">85 جنيه</div>
+        <div class="summary-details">
+          <div class="summary-detail"><div class="label">المسافة</div><div class="value">4.2 كم</div></div>
+          <div class="summary-detail"><div class="label">الوقت</div><div class="value">18 دقيقة</div></div>
+          <div class="summary-detail"><div class="label">طريقة الدفع</div><div class="value">كاش 💵</div></div>
+          <div class="summary-detail"><div class="label">السائق</div><div class="value">محمد علي</div></div>
+        </div>
+      </div>
+      <div class="rating-section">
+        <h3>قيّم رحلتك ⭐</h3>
+        <div class="rating-stars" id="ratingStars">
+          <span class="star" data-val="1" onclick="setRating(1)">⭐</span>
+          <span class="star" data-val="2" onclick="setRating(2)">⭐</span>
+          <span class="star" data-val="3" onclick="setRating(3)">⭐</span>
+          <span class="star" data-val="4" onclick="setRating(4)">⭐</span>
+          <span class="star" data-val="5" onclick="setRating(5)">⭐</span>
+        </div>
+        <textarea class="rating-comment" placeholder="شاركنا تجربتك (اختياري)"></textarea>
+      </div>
+      <button class="done-btn" onclick="finishTrip()">تم</button>
+    </div>
+  </div>
+
+  <!-- ===== MAIN APP ===== -->
+  <div class="app" id="mainApp">
+    <div class="app-header">
+      <div class="header-brand">
+        <span>🚐</span>
+        <h1>ميكروباصي</h1>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn" onclick="showScreen('safetyScreen')">🛡️</button>
+        <button class="header-btn" onclick="showScreen('notificationsScreen')">
+          🔔
+          <span class="notif-badge">2</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div id="map"></div>
+      <div class="search-overlay">
+        <div class="search-bar" onclick="showScreen('bookingScreen')">
+          <span class="icon">📍</span>
+          <span class="text">إلى أين؟</span>
+          <button class="voice" onclick="event.stopPropagation(); startVoice()">🎤</button>
+        </div>
+      </div>
+      <div class="bottom-sheet" id="bottomSheet">
+        <div class="sheet-handle" onclick="toggleSheet()"></div>
+        <div class="sheet-content">
+          <div class="quick-actions">
+            <div class="quick-action" onclick="showScreen('bookingScreen')">
+              <span class="emoji">🏠</span>
+              <span class="label">البيت</span>
+            </div>
+            <div class="quick-action" onclick="showScreen('bookingScreen')">
+              <span class="emoji">🏢</span>
+              <span class="label">الشغل</span>
+            </div>
+            <div class="quick-action" onclick="showScreen('bookingScreen')">
+              <span class="emoji">🏫</span>
+              <span class="label">الجامعة</span>
+            </div>
+            <div class="quick-action" onclick="showScreen('bookingScreen')">
+              <span class="emoji">🛒</span>
+              <span class="label">السوق</span>
+            </div>
+          </div>
+          <div class="section-title">🕐 رحلات سابقة</div>
+          <div class="ride-card" onclick="showScreen('bookingScreen')">
+            <div class="ride-icon">🏢</div>
+            <div class="ride-info">
+              <div class="ride-dest">مدينة نصر — شارع عباس العقاد</div>
+              <div class="ride-meta">سوزوكي • 85 ج</div>
+            </div>
+            <div class="ride-price">→</div>
+          </div>
+          <div class="ride-card" onclick="showScreen('bookingScreen')">
+            <div class="ride-icon">🏬</div>
+            <div class="ride-info">
+              <div class="ride-dest">الزمالك — شارع 26 يوليو</div>
+              <div class="ride-meta">شيفروليه • 120 ج</div>
+            </div>
+            <div class="ride-price">→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-item active" onclick="switchTab(this, 'home')">
+        <span class="icon">🏠</span>
+        <span class="label">الرئيسية</span>
+      </button>
+      <button class="nav-item" onclick="switchTab(this, 'trips'); showScreen('tripsListScreen')">
+        <span class="icon">📋</span>
+        <span class="label">رحلاتي</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('bookingScreen')" style="margin-top:-30px">
+        <span style="display:flex;align-items:center;justify-content:center;width:56px;height:56px;background:var(--primary);border-radius:50%;font-size:26px;box-shadow:0 4px 16px rgba(26,107,60,0.4)">🚐</span>
+        <span class="label" style="margin-top:4px">احجز</span>
+      </button>
+      <button class="nav-item" onclick="switchTab(this, 'offers')">
+        <span class="icon">🎁</span>
+        <span class="label">عروض</span>
+      </button>
+      <button class="nav-item" onclick="switchTab(this, 'profile'); showScreen('profileScreen')">
+        <span class="icon">👤</span>
+        <span class="label">حسابي</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== NOTIFICATIONS SCREEN ===== -->
+  <div class="screen" id="notificationsScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>الإشعارات</h2>
+    </div>
+    <div class="trips-list">
+      <div class="ride-card">
+        <div class="ride-icon">🎁</div>
+        <div class="ride-info">
+          <div class="ride-dest">عرض خاص! خصم 20% على أول رحلة</div>
+          <div class="ride-meta">قبل ساعتين — استخدم الكود: MIKRO20</div>
+        </div>
+      </div>
+      <div class="ride-card">
+        <div class="ride-icon">🚐</div>
+        <div class="ride-info">
+          <div class="ride-dest">تم إضافة خط سوزوكي جديد — المعادي إلى وسط البلد</div>
+          <div class="ride-meta">منذ يوم — الأسعار تبدأ من 45 جنيه</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ==================== STATE ====================
+    let currentSlide = 0;
+    let selectedCar = 'suzuki';
+    let passengerCount = 1;
+    let isFamilyMode = false;
+    let ratingValue = 0;
+    let isLoggedIn = false;
+    let screenHistory = [];
+
+    const FARE_CONFIG = {
+      suzuki:    { base: 20, perKm: 13, perMin: 2,   min: 50 },
+      chevrolet: { base: 30, perKm: 16, perMin: 2.5, min: 70 },
+    };
+
+    // ==================== SPLASH & ONBOARDING ====================
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('splash').classList.add('hide');
+        const seen = localStorage.getItem('mikrobassi_onboarding');
+        if (seen) {
+          showScreen('loginScreen');
+        } else {
+          document.getElementById('onboarding').classList.remove('hidden');
+        }
+      }, 2200);
+    });
+
+    function nextOnboarding() {
+      const slides = document.querySelectorAll('.onboarding-slide');
+      const dots = document.querySelectorAll('.onboarding-dots span');
+      if (currentSlide < slides.length - 1) {
+        slides[currentSlide].classList.remove('active');
+        dots[currentSlide].classList.remove('active');
+        currentSlide++;
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
+        if (currentSlide === slides.length - 1) {
+          document.getElementById('onboardingBtn').textContent = 'ابدأ الآن 🚀';
+        }
+      } else {
+        skipOnboarding();
+      }
+    }
+
+    function skipOnboarding() {
+      localStorage.setItem('mikrobassi_onboarding', 'true');
+      document.getElementById('onboarding').classList.add('hidden');
+      showScreen('loginScreen');
+    }
+
+    // ==================== AUTH ====================
+    function sendOTP() {
+      const phone = document.getElementById('phoneInput').value;
+      if (phone.length < 9) { showToast('أدخل رقم هاتف صحيح'); return; }
+      document.getElementById('loginBtn').innerHTML = '<span class="spinner"></span>';
+      setTimeout(() => {
+        document.getElementById('otpPhone').textContent = '+20 ' + phone.replace(/(\d{2})(\d{4})(\d{4})/, '$1 $2 $3');
+        showScreen('otpScreen');
+        startOTPTimer();
+        document.getElementById('loginBtn').textContent = 'إرسال رمز التحقق';
+      }, 1500);
+    }
+
+    function startOTPTimer() {
+      let time = 30;
+      const el = document.getElementById('otpTimer');
+      const btn = document.getElementById('resendBtn');
+      btn.style.display = 'none';
+      const interval = setInterval(() => {
+        time--;
+        el.textContent = `إعادة الإرسال بعد 0:${time.toString().padStart(2, '0')}`;
+        if (time <= 0) {
+          clearInterval(interval);
+          el.style.display = 'none';
+          btn.style.display = 'block';
+        }
+      }, 1000);
+    }
+
+    function resendOTP() {
+      startOTPTimer();
+      document.getElementById('otpTimer').style.display = 'block';
+      showToast('تم إعادة إرسال الرمز');
+    }
+
+    // OTP input handling
+    document.querySelectorAll('.otp-input').forEach((input, idx, inputs) => {
+      input.addEventListener('input', (e) => {
+        if (e.target.value && idx < inputs.length - 1) inputs[idx + 1].focus();
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && idx > 0) inputs[idx - 1].focus();
+      });
+    });
+
+    function verifyOTP() {
+      const code = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+      if (code.length < 6) { showToast('أدخل الرمز كاملاً'); return; }
+      isLoggedIn = true;
+      localStorage.setItem('mikrobassi_loggedin', 'true');
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
+      document.getElementById('mainApp').classList.add('show');
+      initMap();
+      showToast('تم تسجيل الدخول بنجاح! 🎉');
+    }
+
+    function socialLogin(provider) {
+      showToast(`جاري تسجيل الدخول عبر ${provider}...`);
+      setTimeout(() => {
+        isLoggedIn = true;
+        localStorage.setItem('mikrobassi_loggedin', 'true');
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
+        document.getElementById('mainApp').classList.add('show');
+        initMap();
+      }, 1500);
+    }
+
+    function logout() {
+      localStorage.removeItem('mikrobassi_loggedin');
+      isLoggedIn = false;
+      document.getElementById('mainApp').classList.remove('show');
+      showScreen('loginScreen');
+    }
+
+    // ==================== MAP ====================
+    function initMap() {
+      if (window._mapInit) return;
+      window._mapInit = true;
+
+      // Cairo center
+      const map = L.map('map', { zoomControl: false }).setView([30.0444, 31.2357], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+      L.control.zoom({ position: 'topright' }).addTo(map);
+
+      // Current location marker
+      const myIcon = L.divIcon({
+        html: '<div style="width:20px;height:20px;background:var(--primary);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3)"></div>',
+        className: '', iconSize: [20, 20], iconAnchor: [10, 10]
+      });
+      L.marker([30.0444, 31.2357], { icon: myIcon }).addTo(map);
+
+      // Some fake driver markers
+      const driverIcon = L.divIcon({
+        html: '<div style="font-size:24px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))">🚐</div>',
+        className: '', iconSize: [30, 30], iconAnchor: [15, 15]
+      });
+      L.marker([30.0500, 31.2400], { icon: driverIcon }).addTo(map);
+      L.marker([30.0380, 31.2300], { icon: driverIcon }).addTo(map);
+      L.marker([30.0480, 31.2450], { icon: driverIcon }).addTo(map);
+
+      // Try geolocation
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          map.setView([pos.coords.latitude, pos.coords.longitude], 15);
+        }, () => {}, { enableHighAccuracy: true });
+      }
+    }
+
+    // ==================== BOOKING ====================
+    function selectCar(el) {
+      document.querySelectorAll('.car-option').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedCar = el.dataset.car;
+      updateFare();
+    }
+
+    function changePassenger(delta) {
+      passengerCount = Math.max(1, Math.min(6, passengerCount + delta));
+      document.getElementById('passengerCount').textContent = passengerCount;
+      document.getElementById('minusBtn').disabled = passengerCount <= 1;
+      document.getElementById('plusBtn').disabled = passengerCount >= 6;
+    }
+
+    function toggleFamily() {
+      isFamilyMode = !isFamilyMode;
+      document.getElementById('familyToggle').classList.toggle('on', isFamilyMode);
+    }
+
+    function updateFare() {
+      const c = FARE_CONFIG[selectedCar];
+      const km = 12, min = 20;
+      const base = c.base;
+      const dist = km * c.perKm;
+      const time = min * c.perMin;
+      const total = Math.max(base + dist + time, c.min);
+      document.getElementById('fareBase').textContent = base + ' ج';
+      document.getElementById('fareDistance').textContent = dist + ' ج';
+      document.getElementById('fareTime').textContent = time + ' ج';
+      document.getElementById('fareTotal').textContent = total + ' ج';
+    }
+
+    function confirmBooking() {
+      const dest = document.getElementById('destinationInput').value;
+      if (!dest) { showToast('أدخل وجهتك أولاً'); return; }
+      showScreen('trackingScreen');
+      initTrackingMap();
+      // Simulate driver arrival
+      setTimeout(() => {
+        document.getElementById('tripStatusText').textContent = 'السائق وصل!';
+        document.getElementById('tripETA').textContent = '📍';
+        showToast('السائق في انتظارك 🚐');
+      }, 8000);
+    }
+
+    // ==================== TRACKING ====================
+    function initTrackingMap() {
+      if (window._trackingMap) return;
+      setTimeout(() => {
+        const map = L.map('trackingMap').setView([30.0444, 31.2357], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap'
+        }).addTo(map);
+        window._trackingMap = map;
+
+        // Route polyline
+        const route = [
+          [30.0444, 31.2357], [30.0460, 31.2380], [30.0480, 31.2400],
+          [30.0500, 31.2420], [30.0520, 31.2450], [30.0540, 31.2480],
+          [30.0560, 31.2500], [30.0580, 31.2510]
+        ];
+        L.polyline(route, { color: '#1A6B3C', weight: 5, opacity: 0.8 }).addTo(map);
+
+        // Pickup
+        L.circleMarker([30.0444, 31.2357], { radius: 8, color: '#1A6B3C', fillColor: '#1A6B3C', fillOpacity: 1 }).addTo(map).bindPopup('موقعك');
+        // Dropoff
+        L.circleMarker([30.0580, 31.2510], { radius: 8, color: '#E74C3C', fillColor: '#E74C3C', fillOpacity: 1 }).addTo(map).bindPopup('الوجهة');
+
+        // Driver moving
+        const driverMarker = L.marker([30.0460, 31.2380], {
+          icon: L.divIcon({ html: '<div style="font-size:28px">🚐</div>', className: '', iconSize: [30,30], iconAnchor: [15,15] })
+        }).addTo(map);
+        let step = 0;
+        const driverRoute = [[30.0460,31.2380],[30.0470,31.2385],[30.0475,31.2390],[30.0480,31.2395],[30.0485,31.2400],[30.0490,31.2405],[30.0495,31.2410],[30.0500,31.2420]];
+        const moveInterval = setInterval(() => {
+          if (step < driverRoute.length) {
+            driverMarker.setLatLng(driverRoute[step]);
+            step++;
+          } else {
+            clearInterval(moveInterval);
+          }
+        }, 1500);
+      }, 300);
+    }
+
+    function shareTrip() {
+      if (navigator.share) {
+        navigator.share({ title: 'ميكروباصي — مشاركة الرحلة', text: 'تابع رحلتي على ميكروباصي 🚐', url: window.location.href });
+      } else {
+        showToast('تم نسخ رابط الرحلة 📋');
+      }
+    }
+
+    function callEmergency() { showToast('جاري الاتصال بالنجدة... 🆘'); }
+    function callDriver() { showToast('جاري الاتصال بالسائق... 📞'); }
+    function chatDriver() { showToast('جاري فتح المحادثة... 💬'); }
+    function addEmergencyContact() { showToast('أضف جهة اتصال من جهات الاتصال'); }
+
+    // ==================== RATING ====================
+    function setRating(val) {
+      ratingValue = val;
+      document.querySelectorAll('#ratingStars .star').forEach((s, i) => {
+        s.classList.toggle('active', i < val);
+      });
+    }
+
+    function finishTrip() {
+      showScreen('mainApp');
+      window._trackingMap = null;
+      showToast('شكراً لاستخدام ميكروباصي! 🎉');
+    }
+
+    // ==================== NAVIGATION ====================
+    function showScreen(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      // Track history
+      const current = document.querySelector('.screen.show');
+      if (current && current.id !== id) {
+        screenHistory.push(current.id);
+      }
+
+      // Hide all screens
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
+
+      if (id === 'mainApp') {
+        document.getElementById('mainApp').classList.add('show');
+      } else {
+        el.classList.add('show');
+        el.classList.add('animate-slide-up');
+      }
+    }
+
+    function goBack() {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
+      if (screenHistory.length > 0) {
+        const prev = screenHistory.pop();
+        if (prev === 'mainApp') {
+          document.getElementById('mainApp').classList.add('show');
+        } else {
+          document.getElementById(prev).classList.add('show');
+        }
+      } else {
+        document.getElementById('mainApp').classList.add('show');
+      }
+    }
+
+    function switchTab(el, tab) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function toggleSheet() {
+      document.getElementById('bottomSheet').classList.toggle('expanded');
+    }
+
+    function startVoice() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        showToast('🎤 جاري الاستماع...');
+      } else {
+        showToast('🎤 التعرف على الصوت غير متاح');
+      }
+    }
+
+    // ==================== TOAST ====================
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ==================== SERVICE WORKER ====================
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+
+    // ==================== AUTO-LOGIN ====================
+    if (localStorage.getItem('mikrobassi_loggedin') === 'true') {
+      isLoggedIn = true;
+      setTimeout(() => {
+        document.getElementById('splash').classList.add('hide');
+        document.getElementById('mainApp').classList.add('show');
+        initMap();
+      }, 2200);
+    }
+  </script>
+</body>
+</html>
