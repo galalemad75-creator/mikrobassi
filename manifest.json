@@ -1,11 +1,11 @@
 {
   "name": "ميكروباصي — نقل ذكي",
   "short_name": "ميكروباصي",
-  "description": "تطبيق نقل ذكي بسيارات فان 7 راكب في مصر",
+  "description": "تطبيق نقل ذكي بسيارات فان 7 راكب في مصر. احجز سوزوكي أو شيفروليه بسهولة وأمان.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "background_color": "#F8FAF9",
   "theme_color": "#1A6B3C",
   "lang": "ar",
@@ -22,24 +22,15 @@
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "screenshots": [
-    { "src": "screenshots/home.png", "sizes": "390x844", "type": "image/png", "form_factor": "narrow", "label": "الشاشة الرئيسية" },
-    { "src": "screenshots/booking.png", "sizes": "390x844", "type": "image/png", "form_factor": "narrow", "label": "حجز رحلة" }
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow", "label": "الشاشة الرئيسية" }
   ],
   "shortcuts": [
-    {
-      "name": "احجز رحلة",
-      "short_name": "حجز",
-      "url": "/?action=book",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "رحلاتي",
-      "short_name": "رحلاتي",
-      "url": "/?action=trips",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
-    }
+    { "name": "احجز رحلة", "short_name": "حجز", "url": "/?action=book", "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }] },
+    { "name": "رحلاتي", "short_name": "رحلاتي", "url": "/?action=trips", "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }] }
   ],
   "related_applications": [],
   "prefer_related_applications": false,
+  "handle_links": "preferred",
+  "launch_handler": { "client_mode": "navigate-existing" },
   "edge_side_panel": { "preferred_width": 400 }
 }
