@@ -1,0 +1,12 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "**/.git/**", "DEPLOYMENT.md", "README.md"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }],
+    "headers": [
+      { "source": "/.well-known/**", "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }] },
+      { "source": "sw.js", "headers": [{ "key": "Service-Worker-Allowed", "value": "/" }] },
+      { "source": "**/*.@(js|css|html|json|png|jpg|svg)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }
+    ]
+  }
+}
