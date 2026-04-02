@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [{
+      "appID": "TEAM_ID.com.mikrobassi.app",
+      "paths": ["*"]
+    }]
+  },
+  "webcredentials": {
+    "apps": ["TEAM_ID.com.mikrobassi.app"]
+  }
+}
