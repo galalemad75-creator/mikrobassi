@@ -33,6 +33,48 @@
       --radius-sm: 10px;
     }
 
+    /* ===== DARK MODE ===== */
+    body.dark {
+      --bg: #0D1117;
+      --card: #161B22;
+      --text: #E6EDF3;
+      --text-secondary: #8B949E;
+      --border: #30363D;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    body.dark .splash-screen { background: linear-gradient(135deg, #0D1117 0%, #161B22 50%, #1A6B3C 100%); }
+    body.dark .app-header { background: var(--card); }
+    body.dark .search-bar { background: var(--card); }
+    body.dark .bottom-sheet { background: var(--card); }
+    body.dark .bottom-nav { background: var(--card); }
+    body.dark .screen-header { background: var(--card); }
+    body.dark .login-card { background: var(--card); }
+    body.dark .otp-screen { background: var(--card); }
+    body.dark .otp-input { background: var(--bg); color: var(--text); }
+    body.dark .car-option { background: var(--card); }
+    body.dark .passenger-counter { background: var(--card); }
+    body.dark .family-toggle { background: var(--card); }
+    body.dark .location-inputs { background: var(--card); }
+    body.dark .loc-field { color: var(--text); }
+    body.dark .ride-card { background: var(--bg); }
+    body.dark .trip-card { background: var(--card); }
+    body.dark .header-btn { background: var(--card); border-color: var(--border); }
+    body.dark .back-btn { background: var(--card); border-color: var(--border); color: var(--text); }
+    body.dark .safety-card { background: var(--card); }
+    body.dark .summary-card { background: var(--card); }
+    body.dark .rating-section { background: var(--card); }
+    body.dark .rating-comment { background: var(--bg); color: var(--text); }
+    body.dark .quick-action { background: var(--bg); }
+    body.dark .menu-item { background: var(--card); }
+    body.dark .contact-item { background: var(--bg); }
+    body.dark .trip-status-bar { background: rgba(26,107,60,0.15); }
+    body.dark .driver-info-card { background: var(--card); }
+    body.dark .tracking-bottom { background: var(--card); }
+    body.dark .onboarding { background: var(--card); }
+    body.dark .onboarding-slide h2 { color: var(--primary-light); }
+    body.dark .login-input { color: var(--text); }
+    body.dark .phone-input { color: var(--text); }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -42,7 +84,19 @@
       overflow-x: hidden;
       min-height: 100vh;
       -webkit-tap-highlight-color: transparent;
+      transition: background 0.3s, color 0.3s;
     }
+
+    /* ========== DARK TOGGLE BUTTON ========== */
+    .dark-toggle {
+      position: fixed; top: 16px; left: 16px; z-index: 9998;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--card); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; cursor: pointer; box-shadow: var(--shadow);
+      transition: all 0.3s;
+    }
+    .dark-toggle:active { transform: scale(0.9); }
 
     /* ========== SPLASH SCREEN ========== */
     .splash-screen {
@@ -69,7 +123,7 @@
     /* ========== ONBOARDING ========== */
     .onboarding {
       position: fixed; inset: 0; z-index: 9000;
-      background: #fff; display: flex; flex-direction: column;
+      background: var(--card); display: flex; flex-direction: column;
     }
     .onboarding.hidden { display: none; }
     .onboarding-slides { flex: 1; overflow: hidden; position: relative; }
@@ -91,7 +145,7 @@
     .onboarding-btn {
       margin: 0 30px 40px; padding: 16px; background: var(--primary);
       color: #fff; border: none; border-radius: var(--radius);
-      font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 700;
+      font-family: 'Cairo'; font-size: 16px; font-weight: 700;
       cursor: pointer; transition: all 0.2s;
     }
     .onboarding-btn:active { transform: scale(0.97); }
@@ -104,12 +158,10 @@
     .app { display: none; flex-direction: column; height: 100vh; }
     .app.show { display: flex; }
 
-    /* Header */
     .app-header {
-      background: #fff; padding: 12px 20px;
+      background: var(--card); padding: 12px 20px;
       display: flex; align-items: center; justify-content: space-between;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06); z-index: 100;
-      position: relative;
     }
     .header-brand { display: flex; align-items: center; gap: 10px; }
     .header-brand span { font-size: 28px; }
@@ -117,28 +169,22 @@
     .header-actions { display: flex; gap: 8px; }
     .header-btn {
       width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border);
-      background: #fff; display: flex; align-items: center; justify-content: center;
-      font-size: 18px; cursor: pointer; transition: all 0.2s;
-      position: relative;
+      background: var(--card); display: flex; align-items: center; justify-content: center;
+      font-size: 18px; cursor: pointer; transition: all 0.2s; position: relative;
     }
     .header-btn:active { transform: scale(0.92); }
     .notif-badge {
       position: absolute; top: -4px; right: -4px; width: 18px; height: 18px;
       background: var(--danger); color: #fff; border-radius: 50%;
-      font-size: 10px; display: flex; align-items: center; justify-content: center;
-      font-weight: 700;
+      font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700;
     }
 
-    /* Map Container */
     .map-container { flex: 1; position: relative; }
     #map { width: 100%; height: 100%; }
 
-    /* Search Bar Overlay */
-    .search-overlay {
-      position: absolute; top: 16px; right: 16px; left: 16px; z-index: 500;
-    }
+    .search-overlay { position: absolute; top: 16px; right: 16px; left: 16px; z-index: 500; }
     .search-bar {
-      background: #fff; border-radius: var(--radius); padding: 14px 18px;
+      background: var(--card); border-radius: var(--radius); padding: 14px 18px;
       box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px;
       cursor: pointer; transition: all 0.2s;
     }
@@ -148,27 +194,21 @@
     .search-bar .voice {
       width: 36px; height: 36px; border-radius: 50%;
       background: var(--primary); color: #fff; border: none;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
     }
 
-    /* Bottom Sheet */
     .bottom-sheet {
       position: absolute; bottom: 0; left: 0; right: 0; z-index: 500;
-      background: #fff; border-radius: 24px 24px 0 0;
+      background: var(--card); border-radius: 24px 24px 0 0;
       box-shadow: 0 -4px 30px rgba(0,0,0,0.12);
       transform: translateY(calc(100% - 100px));
       transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
       max-height: 75vh; overflow-y: auto;
     }
     .bottom-sheet.expanded { transform: translateY(0); }
-    .sheet-handle {
-      width: 40px; height: 4px; background: var(--border);
-      border-radius: 2px; margin: 12px auto;
-    }
+    .sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto; }
     .sheet-content { padding: 0 20px 30px; }
 
-    /* Quick Actions */
     .quick-actions { display: flex; gap: 12px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
     .quick-action {
       display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -180,7 +220,6 @@
     .quick-action .emoji { font-size: 28px; }
     .quick-action .label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-align: center; }
 
-    /* Recent Rides */
     .section-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .ride-card {
       display: flex; align-items: center; gap: 14px; padding: 14px;
@@ -188,32 +227,29 @@
       cursor: pointer; transition: all 0.2s;
     }
     .ride-card:active { background: #E8F5E9; }
-    .ride-icon { font-size: 24px; width: 44px; height: 44px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .ride-icon { font-size: 24px; width: 44px; height: 44px; background: var(--card); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
     .ride-info { flex: 1; }
     .ride-dest { font-size: 14px; font-weight: 600; }
     .ride-meta { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
     .ride-price { font-size: 14px; font-weight: 700; color: var(--primary); }
 
-    /* ========== SCREENS (Modals) ========== */
+    /* ========== SCREENS ========== */
     .screen {
       position: fixed; inset: 0; z-index: 2000;
-      background: var(--bg); display: none; flex-direction: column;
-      overflow-y: auto;
+      background: var(--bg); display: none; flex-direction: column; overflow-y: auto;
     }
     .screen.show { display: flex; }
 
-    /* Screen Header */
     .screen-header {
       display: flex; align-items: center; gap: 14px;
-      padding: 16px 20px; background: #fff;
+      padding: 16px 20px; background: var(--card);
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .back-btn {
       width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border);
-      background: #fff; display: flex; align-items: center; justify-content: center;
-      font-size: 18px; cursor: pointer; font-family: 'Cairo';
+      background: var(--card); display: flex; align-items: center; justify-content: center;
+      font-size: 18px; cursor: pointer; font-family: 'Cairo'; color: var(--text);
     }
-    .screen-header h2 { font-size: 18px; font-weight: 700; }
 
     /* ========== LOGIN SCREEN ========== */
     .login-screen {
@@ -224,7 +260,7 @@
     .login-title { color: #fff; font-size: 28px; font-weight: 800; text-align: center; }
     .login-sub { color: rgba(255,255,255,0.7); text-align: center; margin-top: 8px; font-size: 14px; }
     .login-card {
-      background: #fff; border-radius: 20px; padding: 30px;
+      background: var(--card); border-radius: 20px; padding: 30px;
       width: 100%; max-width: 400px; margin-top: 40px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     }
@@ -238,7 +274,7 @@
     .phone-prefix { font-size: 15px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
     .phone-input {
       flex: 1; border: none; background: none; font-family: 'Cairo';
-      font-size: 16px; outline: none; direction: ltr; text-align: left;
+      font-size: 16px; outline: none; direction: ltr; text-align: left; color: var(--text);
     }
     .login-btn {
       width: 100%; padding: 16px; background: var(--primary); color: #fff;
@@ -252,27 +288,36 @@
     .social-login { display: flex; gap: 12px; }
     .social-btn {
       flex: 1; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
-      background: #fff; font-size: 22px; cursor: pointer; display: flex; align-items: center;
+      background: var(--card); font-size: 22px; cursor: pointer; display: flex; align-items: center;
       justify-content: center; transition: all 0.2s;
     }
     .social-btn:active { background: var(--bg); }
-    .login-terms { text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-secondary); line-height: 1.8; }
-    .login-terms a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .login-terms { text-align: center; margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.8; }
+    .login-terms a { color: #fff; text-decoration: underline; font-weight: 600; }
+    .demo-hint {
+      text-align: center; margin-top: 16px; padding: 10px 14px;
+      background: rgba(255,255,255,0.1); border-radius: var(--radius-sm);
+      font-size: 12px; color: rgba(255,255,255,0.8);
+    }
 
     /* ========== OTP SCREEN ========== */
-    .otp-screen { background: #fff; }
+    .otp-screen { background: var(--bg); }
     .otp-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
     .otp-icon { font-size: 70px; margin-bottom: 20px; }
     .otp-title { font-size: 22px; font-weight: 700; text-align: center; }
     .otp-phone { color: var(--primary); font-weight: 700; direction: ltr; }
     .otp-sub { color: var(--text-secondary); text-align: center; margin-top: 8px; font-size: 14px; }
-    .otp-inputs {
-      display: flex; gap: 12px; margin: 30px 0; justify-content: center;
+    .otp-code-display {
+      background: #E8F5E9; border-radius: var(--radius-sm); padding: 12px 20px;
+      margin: 16px 0; font-size: 14px; color: var(--primary); font-weight: 600;
+      text-align: center;
     }
+    .otp-inputs { display: flex; gap: 12px; margin: 20px 0; justify-content: center; }
     .otp-input {
       width: 52px; height: 60px; border: 2px solid var(--border); border-radius: 14px;
       text-align: center; font-family: 'Cairo'; font-size: 24px; font-weight: 700;
       outline: none; transition: all 0.2s; direction: ltr;
+      background: var(--card); color: var(--text);
     }
     .otp-input:focus { border-color: var(--primary); background: #E8F5E9; }
     .otp-timer { color: var(--text-secondary); font-size: 14px; margin-bottom: 20px; }
@@ -283,27 +328,25 @@
       font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s;
     }
     .otp-verify:active { transform: scale(0.97); }
+    .otp-auto-msg {
+      margin-top: 16px; font-size: 13px; color: var(--text-secondary);
+      text-align: center; animation: fadeIn 0.5s ease;
+    }
 
     /* ========== BOOKING SCREEN ========== */
     .booking-content { padding: 20px; flex: 1; }
-    .location-inputs { background: #fff; border-radius: var(--radius); padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); }
-    .loc-input {
-      display: flex; align-items: center; gap: 12px; padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    .location-inputs { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); }
+    .loc-input { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .loc-input:last-child { border-bottom: none; }
     .loc-dot { width: 12px; height: 12px; border-radius: 50%; }
     .loc-dot.pickup { background: var(--primary); box-shadow: 0 0 0 4px rgba(26,107,60,0.2); }
     .loc-dot.dropoff { background: var(--danger); box-shadow: 0 0 0 4px rgba(231,76,60,0.2); }
-    .loc-field {
-      flex: 1; border: none; font-family: 'Cairo'; font-size: 15px;
-      outline: none; background: none;
-    }
-    .loc-field::placeholder { color: #bbb; }
+    .loc-field { flex: 1; border: none; font-family: 'Cairo'; font-size: 15px; outline: none; background: none; color: var(--text); }
+    .loc-field::placeholder { color: var(--text-secondary); }
 
     .car-selector { display: flex; gap: 12px; margin-bottom: 16px; }
     .car-option {
-      flex: 1; background: #fff; border: 2px solid var(--border); border-radius: var(--radius);
+      flex: 1; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius);
       padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;
     }
     .car-option.selected { border-color: var(--primary); background: #E8F5E9; }
@@ -313,7 +356,7 @@
     .car-option .car-time { font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 4px; }
 
     .passenger-counter {
-      background: #fff; border-radius: var(--radius); padding: 16px;
+      background: var(--card); border-radius: var(--radius); padding: 16px;
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 16px; box-shadow: var(--shadow);
     }
@@ -321,7 +364,7 @@
     .counter-controls { display: flex; align-items: center; gap: 16px; }
     .counter-btn {
       width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--primary);
-      background: #fff; color: var(--primary); font-size: 20px; font-weight: 700;
+      background: var(--card); color: var(--primary); font-size: 20px; font-weight: 700;
       display: flex; align-items: center; justify-content: center; cursor: pointer;
       transition: all 0.2s; font-family: 'Cairo';
     }
@@ -330,7 +373,7 @@
     .counter-value { font-size: 22px; font-weight: 800; min-width: 30px; text-align: center; }
 
     .family-toggle {
-      background: #fff; border-radius: var(--radius); padding: 16px;
+      background: var(--card); border-radius: var(--radius); padding: 16px;
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 16px; box-shadow: var(--shadow);
     }
@@ -338,22 +381,12 @@
     .family-info .emoji { font-size: 24px; }
     .family-info .text h4 { font-size: 14px; font-weight: 700; }
     .family-info .text p { font-size: 12px; color: var(--text-secondary); }
-    .toggle {
-      width: 52px; height: 28px; background: #ddd; border-radius: 14px;
-      position: relative; cursor: pointer; transition: all 0.3s;
-    }
+    .toggle { width: 52px; height: 28px; background: var(--border); border-radius: 14px; position: relative; cursor: pointer; transition: all 0.3s; }
     .toggle.on { background: var(--primary); }
-    .toggle::after {
-      content: ''; position: absolute; top: 3px; right: 3px;
-      width: 22px; height: 22px; background: #fff; border-radius: 50%;
-      transition: all 0.3s; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
+    .toggle::after { content: ''; position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; background: #fff; border-radius: 50%; transition: all 0.3s; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
     .toggle.on::after { right: 27px; }
 
-    .fare-preview {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border-radius: var(--radius); padding: 20px; color: #fff; margin-bottom: 16px;
-    }
+    .fare-preview { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: var(--radius); padding: 20px; color: #fff; margin-bottom: 16px; }
     .fare-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; opacity: 0.9; }
     .fare-total { display: flex; justify-content: space-between; font-size: 22px; font-weight: 800; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); }
     .fare-note { font-size: 11px; opacity: 0.7; text-align: center; margin-top: 10px; }
@@ -370,16 +403,13 @@
     .tracking-map { flex: 1; position: relative; }
     .tracking-map #trackingMap { width: 100%; height: 100%; }
     .tracking-bottom {
-      background: #fff; border-radius: 24px 24px 0 0; padding: 20px;
+      background: var(--card); border-radius: 24px 24px 0 0; padding: 20px;
       box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
     }
-    .driver-info-card {
-      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
-    }
+    .driver-info-card { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
     .driver-avatar {
       width: 56px; height: 56px; border-radius: 16px;
-      background: var(--primary); display: flex; align-items: center;
-      justify-content: center; font-size: 28px;
+      background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 28px;
     }
     .driver-details { flex: 1; }
     .driver-details h3 { font-size: 16px; font-weight: 700; }
@@ -388,74 +418,51 @@
     .driver-actions { display: flex; gap: 10px; }
     .driver-action-btn {
       width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border);
-      background: #fff; font-size: 18px; display: flex; align-items: center;
-      justify-content: center; cursor: pointer;
+      background: var(--card); font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
-
-    .trip-status-bar {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 16px; background: #E8F5E9; border-radius: var(--radius-sm);
-      margin-bottom: 16px;
-    }
+    .trip-status-bar { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #E8F5E9; border-radius: var(--radius-sm); margin-bottom: 16px; }
     .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--primary); animation: blink 1.5s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .status-text { font-size: 14px; font-weight: 600; flex: 1; }
     .status-time { font-size: 13px; color: var(--primary); font-weight: 700; }
-
     .trip-actions { display: flex; gap: 10px; }
     .trip-action {
       flex: 1; padding: 14px; border-radius: var(--radius-sm); border: none;
       font-family: 'Cairo'; font-size: 14px; font-weight: 700; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: all 0.2s;
     }
     .trip-action.share { background: #E8F5E9; color: var(--primary); }
     .trip-action.emergency { background: #FDEDEC; color: var(--danger); }
-    .trip-action:active { transform: scale(0.97); }
 
     /* ========== TRIP SUMMARY ========== */
     .summary-content { padding: 20px; }
-    .summary-card {
-      background: #fff; border-radius: var(--radius); padding: 24px;
-      text-align: center; margin-bottom: 16px; box-shadow: var(--shadow);
-    }
+    .summary-card { background: var(--card); border-radius: var(--radius); padding: 24px; text-align: center; margin-bottom: 16px; box-shadow: var(--shadow); }
     .summary-icon { font-size: 60px; margin-bottom: 12px; }
     .summary-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
     .summary-amount { font-size: 36px; font-weight: 900; color: var(--primary); margin: 16px 0; }
     .summary-details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
-    .summary-detail {
-      background: var(--bg); border-radius: var(--radius-sm); padding: 12px;
-      text-align: center;
-    }
+    .summary-detail { background: var(--bg); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
     .summary-detail .label { font-size: 12px; color: var(--text-secondary); }
     .summary-detail .value { font-size: 16px; font-weight: 700; margin-top: 4px; }
 
-    .rating-section { background: #fff; border-radius: var(--radius); padding: 24px; text-align: center; margin-bottom: 16px; box-shadow: var(--shadow); }
+    .rating-section { background: var(--card); border-radius: var(--radius); padding: 24px; text-align: center; margin-bottom: 16px; box-shadow: var(--shadow); }
     .rating-section h3 { margin-bottom: 16px; }
     .rating-stars { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
-    .star {
-      font-size: 36px; cursor: pointer; transition: all 0.2s;
-      filter: grayscale(1) opacity(0.3);
-    }
+    .star { font-size: 36px; cursor: pointer; transition: all 0.2s; filter: grayscale(1) opacity(0.3); }
     .star.active { filter: none; transform: scale(1.1); }
     .rating-comment {
       width: 100%; padding: 14px; border: 1px solid var(--border);
       border-radius: var(--radius-sm); font-family: 'Cairo'; font-size: 14px;
-      resize: none; height: 80px; outline: none;
+      resize: none; height: 80px; outline: none; background: var(--card); color: var(--text);
     }
     .rating-comment:focus { border-color: var(--primary); }
-
     .done-btn {
       width: 100%; padding: 18px; background: var(--primary); color: #fff;
-      border: none; border-radius: var(--radius); font-family: 'Cairo';
-      font-size: 17px; font-weight: 700; cursor: pointer;
+      border: none; border-radius: var(--radius); font-family: 'Cairo'; font-size: 17px; font-weight: 700; cursor: pointer;
     }
 
-    /* ========== PROFILE SCREEN ========== */
-    .profile-header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      padding: 30px 20px; text-align: center; color: #fff;
-    }
+    /* ========== PROFILE ========== */
+    .profile-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 30px 20px; text-align: center; color: #fff; }
     .profile-avatar {
       width: 80px; height: 80px; border-radius: 24px;
       background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
@@ -464,20 +471,15 @@
     }
     .profile-name { font-size: 20px; font-weight: 700; }
     .profile-phone { font-size: 14px; opacity: 0.8; margin-top: 4px; direction: ltr; }
-    .profile-stats {
-      display: flex; gap: 12px; margin-top: 20px;
-    }
-    .stat-item {
-      flex: 1; background: rgba(255,255,255,0.15); border-radius: var(--radius-sm);
-      padding: 12px; backdrop-filter: blur(10px);
-    }
+    .profile-stats { display: flex; gap: 12px; margin-top: 20px; }
+    .stat-item { flex: 1; background: rgba(255,255,255,0.15); border-radius: var(--radius-sm); padding: 12px; backdrop-filter: blur(10px); }
     .stat-item .num { font-size: 20px; font-weight: 800; }
     .stat-item .lbl { font-size: 11px; opacity: 0.8; margin-top: 2px; }
 
     .profile-menu { padding: 20px; }
     .menu-item {
       display: flex; align-items: center; gap: 14px; padding: 16px;
-      background: #fff; border-radius: var(--radius-sm); margin-bottom: 8px;
+      background: var(--card); border-radius: var(--radius-sm); margin-bottom: 8px;
       cursor: pointer; transition: all 0.2s;
     }
     .menu-item:active { background: var(--bg); }
@@ -486,28 +488,9 @@
     .menu-arrow { color: var(--text-secondary); font-size: 18px; }
     .menu-item.danger .menu-text { color: var(--danger); }
 
-    /* ========== BOTTOM NAV ========== */
-    .bottom-nav {
-      background: #fff; display: flex; padding: 8px 0;
-      padding-bottom: max(8px, env(safe-area-inset-bottom));
-      box-shadow: 0 -2px 12px rgba(0,0,0,0.06); z-index: 100;
-    }
-    .nav-item {
-      flex: 1; display: flex; flex-direction: column; align-items: center;
-      gap: 4px; padding: 8px; cursor: pointer; transition: all 0.2s;
-      border: none; background: none; font-family: 'Cairo';
-    }
-    .nav-item .icon { font-size: 24px; transition: all 0.2s; }
-    .nav-item .label { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
-    .nav-item.active .icon { transform: scale(1.15); }
-    .nav-item.active .label { color: var(--primary); font-weight: 700; }
-
     /* ========== TRIPS LIST ========== */
     .trips-list { padding: 20px; }
-    .trip-card {
-      background: #fff; border-radius: var(--radius); padding: 16px;
-      margin-bottom: 12px; box-shadow: var(--shadow); cursor: pointer;
-    }
+    .trip-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); cursor: pointer; }
     .trip-card:active { transform: scale(0.98); }
     .trip-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .trip-date { font-size: 12px; color: var(--text-secondary); }
@@ -525,19 +508,13 @@
     .trip-card-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-secondary); }
     .trip-card-price { font-weight: 700; color: var(--primary); font-size: 16px; }
 
-    /* ========== SAFETY SCREEN ========== */
+    /* ========== SAFETY ========== */
     .safety-content { padding: 20px; }
-    .safety-card {
-      background: #fff; border-radius: var(--radius); padding: 20px;
-      margin-bottom: 12px; box-shadow: var(--shadow);
-    }
+    .safety-card { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
     .safety-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
     .safety-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
     .safety-contacts { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
-    .contact-item {
-      display: flex; align-items: center; gap: 12px; padding: 12px;
-      background: var(--bg); border-radius: var(--radius-sm);
-    }
+    .contact-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg); border-radius: var(--radius-sm); }
     .contact-item .emoji { font-size: 20px; }
     .contact-item .info { flex: 1; }
     .contact-item .name { font-size: 14px; font-weight: 600; }
@@ -548,13 +525,52 @@
       font-size: 14px; color: var(--text-secondary); cursor: pointer;
     }
 
+    /* ========== ABOUT SCREEN ========== */
+    .about-hero {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 40px 20px; text-align: center; color: #fff;
+    }
+    .about-hero .logo { font-size: 64px; margin-bottom: 12px; }
+    .about-hero h1 { font-size: 26px; font-weight: 800; }
+    .about-hero .ver { font-size: 13px; opacity: 0.7; margin-top: 6px; }
+    .about-section { padding: 20px; }
+    .about-card { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; box-shadow: var(--shadow); }
+    .about-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .about-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.9; }
+    .about-card ul { list-style: none; padding: 0; }
+    .about-card li { padding: 8px 0; font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; }
+    .about-card li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+    .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .team-member {
+      text-align: center; padding: 16px; background: var(--bg);
+      border-radius: var(--radius-sm);
+    }
+    .team-member .avatar { font-size: 36px; margin-bottom: 8px; }
+    .team-member .name { font-size: 14px; font-weight: 700; }
+    .team-member .role { font-size: 12px; color: var(--text-secondary); }
+
+    /* ========== BOTTOM NAV ========== */
+    .bottom-nav {
+      background: var(--card); display: flex; padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.06); z-index: 100;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 4px; padding: 8px; cursor: pointer; transition: all 0.2s;
+      border: none; background: none; font-family: 'Cairo'; color: var(--text);
+    }
+    .nav-item .icon { font-size: 24px; transition: all 0.2s; }
+    .nav-item .label { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
+    .nav-item.active .icon { transform: scale(1.15); }
+    .nav-item.active .label { color: var(--primary); font-weight: 700; }
+
     /* ========== TOAST ========== */
     .toast {
       position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--text); color: #fff; padding: 14px 24px; border-radius: 12px;
+      background: var(--text); color: var(--bg); padding: 14px 24px; border-radius: 12px;
       font-family: 'Cairo'; font-size: 14px; font-weight: 600; z-index: 9999;
-      opacity: 0; transition: all 0.3s ease; pointer-events: none;
-      white-space: nowrap;
+      opacity: 0; transition: all 0.3s ease; pointer-events: none; white-space: nowrap;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -564,22 +580,17 @@
     .animate-slide-up { animation: slideUp 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
     .animate-fade-in { animation: fadeIn 0.3s ease; }
 
-    /* Loading spinner */
     .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Empty state */
-    .empty-state { text-align: center; padding: 40px 20px; }
-    .empty-state .emoji { font-size: 48px; margin-bottom: 16px; }
-    .empty-state h3 { font-size: 16px; margin-bottom: 8px; }
-    .empty-state p { font-size: 13px; color: var(--text-secondary); }
-
-    /* Leaflet overrides for RTL */
     .leaflet-control-zoom { left: auto !important; right: 10px !important; }
     .leaflet-control-attribution { direction: ltr; }
   </style>
 </head>
 <body>
+
+  <!-- DARK MODE TOGGLE — always visible -->
+  <button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()">🌙</button>
 
   <!-- ===== SPLASH SCREEN ===== -->
   <div class="splash-screen" id="splash">
@@ -632,6 +643,7 @@
         <input type="tel" class="phone-input" id="phoneInput" placeholder="10 1234 5678" maxlength="11" inputmode="numeric">
       </div>
       <button class="login-btn" id="loginBtn" onclick="sendOTP()">إرسال رمز التحقق</button>
+      <div class="demo-hint">💡 للتجربة: أدخل أي رقم واضغط إرسال — الكود يظهر تلقائياً</div>
       <div class="login-divider">أو سجل بـ</div>
       <div class="social-login">
         <button class="social-btn" onclick="socialLogin('google')">G</button>
@@ -639,8 +651,8 @@
         <button class="social-btn" onclick="socialLogin('facebook')">f</button>
       </div>
       <div class="login-terms">
-        بالتسجيل أنت توافق على <a href="#" onclick="showScreen('termsScreen')">شروط الاستخدام</a>
-        و <a href="#" onclick="showScreen('privacyScreen')">سياسة الخصوصية</a>
+        بالتسجيل أنت توافق على <a href="#" onclick="showScreen('termsScreen');return false">شروط الاستخدام</a>
+        و <a href="#" onclick="showScreen('privacyScreen');return false">سياسة الخصوصية</a>
       </div>
     </div>
   </div>
@@ -655,6 +667,7 @@
       <div class="otp-icon">📱</div>
       <div class="otp-title">أدخل رمز التحقق</div>
       <div class="otp-sub">أرسلنا رمز لـ <span class="otp-phone" id="otpPhone">+20 10 1234 5678</span></div>
+      <div class="otp-code-display" id="otpCodeDisplay">🔑 كود التحقق: <strong id="otpCodeValue">123456</strong></div>
       <div class="otp-inputs">
         <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="0">
         <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="1">
@@ -664,8 +677,9 @@
         <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" data-idx="5">
       </div>
       <div class="otp-timer" id="otpTimer">إعادة الإرسال بعد 0:30</div>
-      <button class="otp-resend" id="resendBtn" onclick="resendOTP()" style="display:none">إعادة إرسال الرمز</button>
+      <button class="otp-resend" id="resendBtn" onclick="resendOTP()" style="display:none">🔄 إعادة إرسال الرمز</button>
       <button class="otp-verify" onclick="verifyOTP()">تحقق</button>
+      <div class="otp-auto-msg" id="otpAutoMsg" style="display:none">✅ تم التحقق التلقائي!</div>
     </div>
   </div>
 
@@ -681,15 +695,14 @@
         <p>
           <strong>آخر تحديث:</strong> مارس 2026<br><br>
           <strong>1. القبول:</strong> باستخدام التطبيق، توافق على هذه الشروط بالكامل.<br><br>
-          <strong>2. الخدمة:</strong> ميكروباصي يوفر خدمة نقل عبر سيارات فان. نحن وسيط بين الراكب والسائق وليست لدينا ملكية للمركبات.<br><br>
-          <strong>3. الحساب:</strong> يجب أن يكون عمرك 18 سنة على الأقل. رقم الهاتف مطلوب للتحقق.<br><br>
-          <strong>4. الأجرة:</strong> يتم حساب الأجرة بناءً على المسافة والوقت. الأسعار معروضة قبل التأكيد.<br><br>
-          <strong>5. الإلغاء:</strong> الإلغاء المجاني خلال دقيقتين. بعد ذلك قد تُفرض رسوم إلغاء.<br><br>
-          <strong>6. السلوك:</strong> يُمنع التدخين أثناء الرحلة. يُمنع إيذاء السائق أو الراكب.<br><br>
-          <strong>7. المسؤولية:</strong> ميكروباصي غير مسؤول عن تصرفات السائقين ولكن يلتزم بفحص المستندات وتقييم السائقين.<br><br>
-          <strong>8. الخصوصية:</strong> نحمي بياناتك وفقاً لسياسة الخصوصية الخاصة بنا.<br><br>
-          <strong>9. التعديل:</strong> قد نعدّل الشروط في أي وقت مع إشعار مسبق.<br><br>
-          <strong>10. القانون:</strong> تخضع هذه الشروط لقوانين جمهورية مصر العربية.
+          <strong>2. الخدمة:</strong> ميكروباصي يوفر خدمة نقل عبر سيارات فان. نحن وسيط بين الراكب والسائق.<br><br>
+          <strong>3. الحساب:</strong> يجب أن يكون عمرك 18 سنة على الأقل.<br><br>
+          <strong>4. الأجرة:</strong> يتم حساب الأجرة بناءً على المسافة والوقت.<br><br>
+          <strong>5. الإلغاء:</strong> الإلغاء المجاني خلال دقيقتين. بعد ذلك قد تُفرض رسوم.<br><br>
+          <strong>6. السلوك:</strong> يُمنع التدخين أثناء الرحلة.<br><br>
+          <strong>7. المسؤولية:</strong> ميكروباصي غير مسؤول عن تصرفات السائقين.<br><br>
+          <strong>8. الخصوصية:</strong> نحمي بياناتك وفقاً لسياسة الخصوصية.<br><br>
+          <strong>9. القانون:</strong> تخضع لقوانين جمهورية مصر العربية.
         </p>
       </div>
     </div>
@@ -703,28 +716,13 @@
     </div>
     <div class="safety-content">
       <div class="safety-card">
-        <h3>🔒 سياسة الخصوصية — ميكروباصي</h3>
+        <h3>🔒 سياسة الخصوصية</h3>
         <p>
-          <strong>آخر تحديث:</strong> مارس 2026<br><br>
-          <strong>البيانات التي نجمعها:</strong><br>
-          • رقم الهاتف (للتحقق والدخول)<br>
-          • الموقع الجغرافي (أثناء الرحلة فقط)<br>
-          • تقييمات الرحلات والتعليقات<br>
-          • بيانات الاستخدام العامة<br><br>
-          <strong>كيف نستخدم البيانات:</strong><br>
-          • تحسين جودة الخدمة والمطابقة بين السائقين والركاب<br>
-          • إرسال إشعارات الرحلة والتحديثات<br>
-          • تحليل الأداء وتحسين التجربة<br><br>
-          <strong>حماية البيانات:</strong><br>
-          • بياناتك مشفرة ومحمية عبر Firebase<br>
-          • لا نشارك بياناتك مع أطراف ثالثة<br>
-          • يمكنك طلب حذف بياناتك في أي وقت<br>
-          • نستخدم HTTPS لجميع الاتصالات<br><br>
-          <strong>حقوقك:</strong><br>
-          • حق الوصول لبياناتك<br>
-          • حق تعديل أو حذف بياناتك<br>
-          • حق سحب الموافقة<br><br>
-          <strong>للتواصل:</strong> privacy@mikrobassi.com
+          <strong>البيانات:</strong> رقم الهاتف، الموقع أثناء الرحلة، التقييمات.<br><br>
+          <strong>الاستخدام:</strong> تحسين الخدمة، إشعارات الرحلة، تحليل الأداء.<br><br>
+          <strong>الحماية:</strong> مشفرة عبر Firebase، لا نشارك مع أطراف ثالثة.<br><br>
+          <strong>حقوقك:</strong> الوصول، التعديل، الحذف، سحب الموافقة.<br><br>
+          <strong>التواصل:</strong> privacy@mikrobassi.com
         </p>
       </div>
     </div>
@@ -737,19 +735,14 @@
       <h2>🛡️ الأمان والطوارئ</h2>
     </div>
     <div class="safety-content">
-      <button class="book-btn" style="background:var(--danger);margin-bottom:20px" onclick="callEmergency()">
-        🆘 زر الطوارئ — اتصل بالنجدة
-      </button>
+      <button class="book-btn" style="background:var(--danger);margin-bottom:20px" onclick="callEmergency()">🆘 زر الطوارئ — اتصل بالنجدة</button>
       <div class="safety-card">
         <h3>📍 مشاركة الموقع</h3>
         <p>شارك موقع رحلتك في الوقت الفعلي مع أشخاص تثق فيهم</p>
-        <div class="safety-contacts" id="emergencyContacts">
+        <div class="safety-contacts">
           <div class="contact-item">
             <span class="emoji">👤</span>
-            <div class="info">
-              <div class="name">أحمد محمد</div>
-              <div class="phone">+20 10 000 0000</div>
-            </div>
+            <div class="info"><div class="name">أحمد محمد</div><div class="phone">+20 10 000 0000</div></div>
           </div>
         </div>
         <button class="add-contact-btn" onclick="addEmergencyContact()">+ إضافة جهة اتصال طوارئ</button>
@@ -763,6 +756,66 @@
           • لا تشارك معلوماتك الشخصية مع السائق<br>
           • تأكد من وجهتك على الخريطة
         </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABOUT SCREEN (من نحن) ===== -->
+  <div class="screen" id="aboutScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>من نحن</h2>
+    </div>
+    <div style="flex:1;overflow-y:auto">
+      <div class="about-hero">
+        <div class="logo">🚐</div>
+        <h1>ميكروباصي</h1>
+        <div class="ver">الإصدار 1.0.0 • 2026</div>
+      </div>
+      <div class="about-section">
+        <div class="about-card">
+          <h3>🎯 رسالتنا</h3>
+          <p>نوفّر حل نقل ذكي، آمن، وعادل لركاب الفان في مصر. نهدف لربط السائقين بالركاب بطريقة سهلة وشفافة، مع الحفاظ على أعلى معايير الجودة والأمان.</p>
+        </div>
+        <div class="about-card">
+          <h3>✨ ما الذي يميزنا</h3>
+          <ul>
+            <li>متخصصون في سيارات الفان 7 راكب</li>
+            <li>أسعار ثابتة وشفافة بدون مفاجآت</li>
+            <li>وضع العائلة للرحلات الخاصة</li>
+            <li>سائقون موثوقون ومتحققون بالكامل</li>
+            <li>زر طوارئ مباشر ومشاركة الموقع</li>
+            <li>دعم فني على مدار الساعة</li>
+          </ul>
+        </div>
+        <div class="about-card">
+          <h3>📊 بالأرقام</h3>
+          <ul>
+            <li>+10,000 راكب مسجل</li>
+            <li>+500 سائق نشط</li>
+            <li>+50,000 رحلة مكتملة</li>
+            <li>4.8 ⭐ تقييم المستخدمين</li>
+            <li>تغطية: القاهرة + الجيزة + الإسكندرية</li>
+          </ul>
+        </div>
+        <div class="about-card">
+          <h3>💰 نظام الأسعار</h3>
+          <ul>
+            <li>🚐 سوزوكي: 20ج فتحة + 13ج/كم + 2ج/دقيقة</li>
+            <li>🚗 شيفروليه: 30ج فتحة + 16ج/كم + 2.5ج/دقيقة</li>
+            <li>العمولة: 8ج ثابت + 8% (حد أدنى 15ج)</li>
+            <li>الإلغاء: مجاني خلال أول دقيقتين</li>
+          </ul>
+        </div>
+        <div class="about-card">
+          <h3>📞 تواصل معنا</h3>
+          <ul>
+            <li>البريد: support@mikrobassi.com</li>
+            <li>الهاتف: +20 2 1234 5678</li>
+            <li>واتساب: +20 10 000 0000</li>
+            <li>العنوان: القاهرة، جمهورية مصر العربية</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -786,49 +839,35 @@
       </div>
       <div class="profile-menu">
         <div class="menu-item" onclick="showScreen('tripsListScreen')">
-          <div class="menu-icon">📋</div>
-          <div class="menu-text">رحلاتي</div>
-          <div class="menu-arrow">←</div>
+          <div class="menu-icon">📋</div><div class="menu-text">رحلاتي</div><div class="menu-arrow">←</div>
         </div>
         <div class="menu-item" onclick="showScreen('safetyScreen')">
-          <div class="menu-icon">🛡️</div>
-          <div class="menu-text">الأمان والطوارئ</div>
-          <div class="menu-arrow">←</div>
+          <div class="menu-icon">🛡️</div><div class="menu-text">الأمان والطوارئ</div><div class="menu-arrow">←</div>
         </div>
         <div class="menu-item">
-          <div class="menu-icon">💳</div>
-          <div class="menu-text">طرق الدفع</div>
-          <div class="menu-arrow">←</div>
+          <div class="menu-icon">💳</div><div class="menu-text">طرق الدفع</div><div class="menu-arrow">←</div>
         </div>
         <div class="menu-item">
-          <div class="menu-icon">🎁</div>
-          <div class="menu-text">العروض والقسائم</div>
-          <div class="menu-arrow">←</div>
+          <div class="menu-icon">🎁</div><div class="menu-text">العروض والقسائم</div><div class="menu-arrow">←</div>
         </div>
         <div class="menu-item">
-          <div class="menu-icon">⚙️</div>
-          <div class="menu-text">الإعدادات</div>
-          <div class="menu-arrow">←</div>
+          <div class="menu-icon">🌙</div><div class="menu-text">الوضع الداكن</div>
+          <div class="toggle" id="profileDarkToggle" onclick="event.stopPropagation(); toggleDarkMode();"></div>
+        </div>
+        <div class="menu-item" onclick="showScreen('aboutScreen')">
+          <div class="menu-icon">🚐</div><div class="menu-text">من نحن</div><div class="menu-arrow">←</div>
         </div>
         <div class="menu-item" onclick="showScreen('termsScreen')">
-          <div class="menu-icon">📋</div>
-          <div class="menu-text">شروط الاستخدام</div>
-          <div class="menu-arrow">←</div>
+          <div class="menu-icon">📋</div><div class="menu-text">شروط الاستخدام</div><div class="menu-arrow">←</div>
         </div>
         <div class="menu-item" onclick="showScreen('privacyScreen')">
-          <div class="menu-icon">🔒</div>
-          <div class="menu-text">سياسة الخصوصية</div>
-          <div class="menu-arrow">←</div>
+          <div class="menu-icon">🔒</div><div class="menu-text">سياسة الخصوصية</div><div class="menu-arrow">←</div>
         </div>
-        <div class="menu-item" style="margin-top:20px">
-          <div class="menu-icon">ℹ️</div>
-          <div class="menu-text">عن ميكروباصي v1.0.0</div>
-          <div class="menu-arrow">←</div>
+        <div class="menu-item">
+          <div class="menu-icon">ℹ️</div><div class="menu-text">عن ميكروباصي v1.0.0</div><div class="menu-arrow">←</div>
         </div>
         <div class="menu-item danger" onclick="logout()">
-          <div class="menu-icon">🚪</div>
-          <div class="menu-text">تسجيل الخروج</div>
-          <div class="menu-arrow">←</div>
+          <div class="menu-icon">🚪</div><div class="menu-text">تسجيل الخروج</div><div class="menu-arrow">←</div>
         </div>
       </div>
     </div>
@@ -840,27 +879,17 @@
       <button class="back-btn" onclick="goBack()">→</button>
       <h2>رحلاتي</h2>
     </div>
-    <div class="trips-list" id="tripsList">
+    <div class="trips-list">
       <div class="trip-card" onclick="showScreen('summaryScreen')">
         <div class="trip-card-top">
           <span class="trip-date">2 أبريل 2026 • 8:30 ص</span>
           <span class="trip-status completed">مكتملة</span>
         </div>
         <div class="trip-route">
-          <div class="route-dots">
-            <div class="route-dot" style="background:var(--primary)"></div>
-            <div class="route-line"></div>
-            <div class="route-dot" style="background:var(--danger)"></div>
-          </div>
-          <div class="route-addresses">
-            <div class="route-addr from">ميدان التحرير</div>
-            <div class="route-addr to">مدينة نصر — شارع عباس العقاد</div>
-          </div>
+          <div class="route-dots"><div class="route-dot" style="background:var(--primary)"></div><div class="route-line"></div><div class="route-dot" style="background:var(--danger)"></div></div>
+          <div class="route-addresses"><div class="route-addr from">ميدان التحرير</div><div class="route-addr to">مدينة نصر — شارع عباس العقاد</div></div>
         </div>
-        <div class="trip-card-bottom">
-          <span>🚐 سوزوكي • 25 دقيقة</span>
-          <span class="trip-card-price">85 ج</span>
-        </div>
+        <div class="trip-card-bottom"><span>🚐 سوزوكي • 25 دقيقة</span><span class="trip-card-price">85 ج</span></div>
       </div>
       <div class="trip-card">
         <div class="trip-card-top">
@@ -868,20 +897,10 @@
           <span class="trip-status completed">مكتملة</span>
         </div>
         <div class="trip-route">
-          <div class="route-dots">
-            <div class="route-dot" style="background:var(--primary)"></div>
-            <div class="route-line"></div>
-            <div class="route-dot" style="background:var(--danger)"></div>
-          </div>
-          <div class="route-addresses">
-            <div class="route-addr from">المعادي</div>
-            <div class="route-addr to">الزمالك — شارع 26 يوليو</div>
-          </div>
+          <div class="route-dots"><div class="route-dot" style="background:var(--primary)"></div><div class="route-line"></div><div class="route-dot" style="background:var(--danger)"></div></div>
+          <div class="route-addresses"><div class="route-addr from">المعادي</div><div class="route-addr to">الزمالك — شارع 26 يوليو</div></div>
         </div>
-        <div class="trip-card-bottom">
-          <span>🚗 شيفروليه • 35 دقيقة</span>
-          <span class="trip-card-price">120 ج</span>
-        </div>
+        <div class="trip-card-bottom"><span>🚗 شيفروليه • 35 دقيقة</span><span class="trip-card-price">120 ج</span></div>
       </div>
       <div class="trip-card">
         <div class="trip-card-top">
@@ -889,20 +908,10 @@
           <span class="trip-status cancelled">ملغاة</span>
         </div>
         <div class="trip-route">
-          <div class="route-dots">
-            <div class="route-dot" style="background:var(--primary)"></div>
-            <div class="route-line"></div>
-            <div class="route-dot" style="background:var(--danger)"></div>
-          </div>
-          <div class="route-addresses">
-            <div class="route-addr from">الدقي</div>
-            <div class="route-addr to">المهندسين — شارع جامعة الدول</div>
-          </div>
+          <div class="route-dots"><div class="route-dot" style="background:var(--primary)"></div><div class="route-line"></div><div class="route-dot" style="background:var(--danger)"></div></div>
+          <div class="route-addresses"><div class="route-addr from">الدقي</div><div class="route-addr to">المهندسين — شارع جامعة الدول</div></div>
         </div>
-        <div class="trip-card-bottom">
-          <span>🚐 سوزوكي</span>
-          <span class="trip-card-price" style="color:var(--danger)">—</span>
-        </div>
+        <div class="trip-card-bottom"><span>🚐 سوزوكي</span><span class="trip-card-price" style="color:var(--danger)">—</span></div>
       </div>
     </div>
   </div>
@@ -915,32 +924,18 @@
     </div>
     <div class="booking-content">
       <div class="location-inputs">
-        <div class="loc-input">
-          <div class="loc-dot pickup"></div>
-          <input type="text" class="loc-field" placeholder="موقع الانطلاق" value="ميدان التحرير">
-        </div>
-        <div class="loc-input">
-          <div class="loc-dot dropoff"></div>
-          <input type="text" class="loc-field" placeholder="إلى أين؟" id="destinationInput">
-        </div>
+        <div class="loc-input"><div class="loc-dot pickup"></div><input type="text" class="loc-field" placeholder="موقع الانطلاق" value="ميدان التحرير"></div>
+        <div class="loc-input"><div class="loc-dot dropoff"></div><input type="text" class="loc-field" placeholder="إلى أين؟" id="destinationInput"></div>
       </div>
-
       <div class="section-title">🚐 اختر السيارة</div>
       <div class="car-selector">
         <div class="car-option selected" data-car="suzuki" onclick="selectCar(this)">
-          <div class="car-emoji">🚐</div>
-          <div class="car-name">سوزوكي</div>
-          <div class="car-price">20ج + 13ج/كم</div>
-          <div class="car-time">🕐 متاح خلال 3 دقائق</div>
+          <div class="car-emoji">🚐</div><div class="car-name">سوزوكي</div><div class="car-price">20ج + 13ج/كم</div><div class="car-time">🕐 متاح خلال 3 دقائق</div>
         </div>
         <div class="car-option" data-car="chevrolet" onclick="selectCar(this)">
-          <div class="car-emoji">🚗</div>
-          <div class="car-name">شيفروليه</div>
-          <div class="car-price">30ج + 16ج/كم</div>
-          <div class="car-time">🕐 متاح خلال 5 دقائق</div>
+          <div class="car-emoji">🚗</div><div class="car-name">شيفروليه</div><div class="car-price">30ج + 16ج/كم</div><div class="car-time">🕐 متاح خلال 5 دقائق</div>
         </div>
       </div>
-
       <div class="passenger-counter">
         <div class="passenger-label">👥 عدد الركاب</div>
         <div class="counter-controls">
@@ -949,18 +944,10 @@
           <button class="counter-btn" id="plusBtn" onclick="changePassenger(1)">+</button>
         </div>
       </div>
-
       <div class="family-toggle">
-        <div class="family-info">
-          <span class="emoji">👨‍👩‍👧‍👦</span>
-          <div class="text">
-            <h4>وضع العائلة</h4>
-            <p>رحلة خاصة ومريحة</p>
-          </div>
-        </div>
+        <div class="family-info"><span class="emoji">👨‍👩‍👧‍👦</span><div class="text"><h4>وضع العائلة</h4><p>رحلة خاصة ومريحة</p></div></div>
         <div class="toggle" id="familyToggle" onclick="toggleFamily()"></div>
       </div>
-
       <div class="fare-preview" id="farePreview">
         <div class="fare-row"><span>فتحة العداد</span><span id="fareBase">20 ج</span></div>
         <div class="fare-row"><span>المسافة (~12 كم)</span><span id="fareDistance">156 ج</span></div>
@@ -968,7 +955,6 @@
         <div class="fare-total"><span>الإجمالي المتوقع</span><span id="fareTotal">216 ج</span></div>
         <div class="fare-note">💡 السعر قد يتغير بناءً على المسار الفعلي</div>
       </div>
-
       <button class="book-btn" onclick="confirmBooking()">🚐 تأكيد الطلب</button>
     </div>
   </div>
@@ -979,9 +965,7 @@
       <button class="back-btn" onclick="goBack()">→</button>
       <h2>رحلة جارية</h2>
     </div>
-    <div class="tracking-map">
-      <div id="trackingMap"></div>
-    </div>
+    <div class="tracking-map"><div id="trackingMap"></div></div>
     <div class="tracking-bottom">
       <div class="driver-info-card">
         <div class="driver-avatar">👨</div>
@@ -1040,22 +1024,27 @@
     </div>
   </div>
 
+  <!-- ===== NOTIFICATIONS SCREEN ===== -->
+  <div class="screen" id="notificationsScreen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="goBack()">→</button>
+      <h2>الإشعارات</h2>
+    </div>
+    <div class="trips-list">
+      <div class="ride-card"><div class="ride-icon">🎁</div><div class="ride-info"><div class="ride-dest">عرض خاص! خصم 20% على أول رحلة</div><div class="ride-meta">قبل ساعتين — استخدم الكود: MIKRO20</div></div></div>
+      <div class="ride-card"><div class="ride-icon">🚐</div><div class="ride-info"><div class="ride-dest">تم إضافة خط سوزوكي جديد — المعادي إلى وسط البلد</div><div class="ride-meta">منذ يوم — الأسعار تبدأ من 45 جنيه</div></div></div>
+    </div>
+  </div>
+
   <!-- ===== MAIN APP ===== -->
   <div class="app" id="mainApp">
     <div class="app-header">
-      <div class="header-brand">
-        <span>🚐</span>
-        <h1>ميكروباصي</h1>
-      </div>
+      <div class="header-brand"><span>🚐</span><h1>ميكروباصي</h1></div>
       <div class="header-actions">
         <button class="header-btn" onclick="showScreen('safetyScreen')">🛡️</button>
-        <button class="header-btn" onclick="showScreen('notificationsScreen')">
-          🔔
-          <span class="notif-badge">2</span>
-        </button>
+        <button class="header-btn" onclick="showScreen('notificationsScreen')">🔔<span class="notif-badge">2</span></button>
       </div>
     </div>
-
     <div class="map-container">
       <div id="map"></div>
       <div class="search-overlay">
@@ -1069,89 +1058,30 @@
         <div class="sheet-handle" onclick="toggleSheet()"></div>
         <div class="sheet-content">
           <div class="quick-actions">
-            <div class="quick-action" onclick="showScreen('bookingScreen')">
-              <span class="emoji">🏠</span>
-              <span class="label">البيت</span>
-            </div>
-            <div class="quick-action" onclick="showScreen('bookingScreen')">
-              <span class="emoji">🏢</span>
-              <span class="label">الشغل</span>
-            </div>
-            <div class="quick-action" onclick="showScreen('bookingScreen')">
-              <span class="emoji">🏫</span>
-              <span class="label">الجامعة</span>
-            </div>
-            <div class="quick-action" onclick="showScreen('bookingScreen')">
-              <span class="emoji">🛒</span>
-              <span class="label">السوق</span>
-            </div>
+            <div class="quick-action" onclick="showScreen('bookingScreen')"><span class="emoji">🏠</span><span class="label">البيت</span></div>
+            <div class="quick-action" onclick="showScreen('bookingScreen')"><span class="emoji">🏢</span><span class="label">الشغل</span></div>
+            <div class="quick-action" onclick="showScreen('bookingScreen')"><span class="emoji">🏫</span><span class="label">الجامعة</span></div>
+            <div class="quick-action" onclick="showScreen('bookingScreen')"><span class="emoji">🛒</span><span class="label">السوق</span></div>
           </div>
           <div class="section-title">🕐 رحلات سابقة</div>
           <div class="ride-card" onclick="showScreen('bookingScreen')">
-            <div class="ride-icon">🏢</div>
-            <div class="ride-info">
-              <div class="ride-dest">مدينة نصر — شارع عباس العقاد</div>
-              <div class="ride-meta">سوزوكي • 85 ج</div>
-            </div>
-            <div class="ride-price">→</div>
+            <div class="ride-icon">🏢</div><div class="ride-info"><div class="ride-dest">مدينة نصر — شارع عباس العقاد</div><div class="ride-meta">سوزوكي • 85 ج</div></div><div class="ride-price">→</div>
           </div>
           <div class="ride-card" onclick="showScreen('bookingScreen')">
-            <div class="ride-icon">🏬</div>
-            <div class="ride-info">
-              <div class="ride-dest">الزمالك — شارع 26 يوليو</div>
-              <div class="ride-meta">شيفروليه • 120 ج</div>
-            </div>
-            <div class="ride-price">→</div>
+            <div class="ride-icon">🏬</div><div class="ride-info"><div class="ride-dest">الزمالك — شارع 26 يوليو</div><div class="ride-meta">شيفروليه • 120 ج</div></div><div class="ride-price">→</div>
           </div>
         </div>
       </div>
     </div>
-
     <div class="bottom-nav">
-      <button class="nav-item active" onclick="switchTab(this, 'home')">
-        <span class="icon">🏠</span>
-        <span class="label">الرئيسية</span>
-      </button>
-      <button class="nav-item" onclick="switchTab(this, 'trips'); showScreen('tripsListScreen')">
-        <span class="icon">📋</span>
-        <span class="label">رحلاتي</span>
-      </button>
+      <button class="nav-item active" onclick="switchTab(this, 'home')"><span class="icon">🏠</span><span class="label">الرئيسية</span></button>
+      <button class="nav-item" onclick="switchTab(this, 'trips'); showScreen('tripsListScreen')"><span class="icon">📋</span><span class="label">رحلاتي</span></button>
       <button class="nav-item" onclick="showScreen('bookingScreen')" style="margin-top:-30px">
         <span style="display:flex;align-items:center;justify-content:center;width:56px;height:56px;background:var(--primary);border-radius:50%;font-size:26px;box-shadow:0 4px 16px rgba(26,107,60,0.4)">🚐</span>
         <span class="label" style="margin-top:4px">احجز</span>
       </button>
-      <button class="nav-item" onclick="switchTab(this, 'offers')">
-        <span class="icon">🎁</span>
-        <span class="label">عروض</span>
-      </button>
-      <button class="nav-item" onclick="switchTab(this, 'profile'); showScreen('profileScreen')">
-        <span class="icon">👤</span>
-        <span class="label">حسابي</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- ===== NOTIFICATIONS SCREEN ===== -->
-  <div class="screen" id="notificationsScreen">
-    <div class="screen-header">
-      <button class="back-btn" onclick="goBack()">→</button>
-      <h2>الإشعارات</h2>
-    </div>
-    <div class="trips-list">
-      <div class="ride-card">
-        <div class="ride-icon">🎁</div>
-        <div class="ride-info">
-          <div class="ride-dest">عرض خاص! خصم 20% على أول رحلة</div>
-          <div class="ride-meta">قبل ساعتين — استخدم الكود: MIKRO20</div>
-        </div>
-      </div>
-      <div class="ride-card">
-        <div class="ride-icon">🚐</div>
-        <div class="ride-info">
-          <div class="ride-dest">تم إضافة خط سوزوكي جديد — المعادي إلى وسط البلد</div>
-          <div class="ride-meta">منذ يوم — الأسعار تبدأ من 45 جنيه</div>
-        </div>
-      </div>
+      <button class="nav-item" onclick="switchTab(this, 'offers')"><span class="icon">🎁</span><span class="label">عروض</span></button>
+      <button class="nav-item" onclick="switchTab(this, 'profile'); showScreen('profileScreen')"><span class="icon">👤</span><span class="label">حسابي</span></button>
     </div>
   </div>
 
@@ -1168,11 +1098,37 @@
     let ratingValue = 0;
     let isLoggedIn = false;
     let screenHistory = [];
+    let generatedOTP = '';
 
     const FARE_CONFIG = {
       suzuki:    { base: 20, perKm: 13, perMin: 2,   min: 50 },
       chevrolet: { base: 30, perKm: 16, perMin: 2.5, min: 70 },
     };
+
+    // ==================== DARK MODE ====================
+    function initDarkMode() {
+      const saved = localStorage.getItem('mikrobassi_dark');
+      if (saved === 'true') {
+        document.body.classList.add('dark');
+        updateDarkToggle(true);
+      }
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('mikrobassi_dark', isDark);
+      updateDarkToggle(isDark);
+    }
+
+    function updateDarkToggle(isDark) {
+      const btn = document.getElementById('darkToggle');
+      if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+      const toggle = document.getElementById('profileDarkToggle');
+      if (toggle) toggle.classList.toggle('on', isDark);
+    }
+
+    // Init dark mode immediately
+    initDarkMode();
 
     // ==================== SPLASH & ONBOARDING ====================
     window.addEventListener('load', () => {
@@ -1214,12 +1170,30 @@
     function sendOTP() {
       const phone = document.getElementById('phoneInput').value;
       if (phone.length < 9) { showToast('أدخل رقم هاتف صحيح'); return; }
+
+      // Generate 6-digit OTP
+      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      document.getElementById('otpCodeValue').textContent = generatedOTP;
+
       document.getElementById('loginBtn').innerHTML = '<span class="spinner"></span>';
       setTimeout(() => {
         document.getElementById('otpPhone').textContent = '+20 ' + phone.replace(/(\d{2})(\d{4})(\d{4})/, '$1 $2 $3');
         showScreen('otpScreen');
         startOTPTimer();
         document.getElementById('loginBtn').textContent = 'إرسال رمز التحقق';
+
+        // Auto-fill OTP after 2 seconds
+        setTimeout(() => {
+          const inputs = document.querySelectorAll('.otp-input');
+          for (let i = 0; i < 6; i++) {
+            inputs[i].value = generatedOTP[i];
+            inputs[i].style.borderColor = 'var(--primary)';
+            inputs[i].style.background = '#E8F5E9';
+          }
+          document.getElementById('otpAutoMsg').style.display = 'block';
+          // Auto-verify after filling
+          setTimeout(() => verifyOTP(), 800);
+        }, 2000);
       }, 1500);
     }
 
@@ -1228,6 +1202,7 @@
       const el = document.getElementById('otpTimer');
       const btn = document.getElementById('resendBtn');
       btn.style.display = 'none';
+      el.style.display = 'block';
       const interval = setInterval(() => {
         time--;
         el.textContent = `إعادة الإرسال بعد 0:${time.toString().padStart(2, '0')}`;
@@ -1240,15 +1215,29 @@
     }
 
     function resendOTP() {
+      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      document.getElementById('otpCodeValue').textContent = generatedOTP;
       startOTPTimer();
-      document.getElementById('otpTimer').style.display = 'block';
-      showToast('تم إعادة إرسال الرمز');
+      showToast('تم إعادة إرسال الرمز ✅');
+      // Auto-fill again
+      setTimeout(() => {
+        const inputs = document.querySelectorAll('.otp-input');
+        for (let i = 0; i < 6; i++) {
+          inputs[i].value = generatedOTP[i];
+          inputs[i].style.borderColor = 'var(--primary)';
+        }
+        setTimeout(() => verifyOTP(), 800);
+      }, 2000);
     }
 
-    // OTP input handling
     document.querySelectorAll('.otp-input').forEach((input, idx, inputs) => {
       input.addEventListener('input', (e) => {
         if (e.target.value && idx < inputs.length - 1) inputs[idx + 1].focus();
+        // Check if all filled
+        const code = Array.from(inputs).map(i => i.value).join('');
+        if (code.length === 6 && code === generatedOTP) {
+          setTimeout(() => verifyOTP(), 300);
+        }
       });
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Backspace' && !e.target.value && idx > 0) inputs[idx - 1].focus();
@@ -1256,8 +1245,6 @@
     });
 
     function verifyOTP() {
-      const code = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
-      if (code.length < 6) { showToast('أدخل الرمز كاملاً'); return; }
       isLoggedIn = true;
       localStorage.setItem('mikrobassi_loggedin', 'true');
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
@@ -1288,31 +1275,15 @@
     function initMap() {
       if (window._mapInit) return;
       window._mapInit = true;
-
-      // Cairo center
       const map = L.map('map', { zoomControl: false }).setView([30.0444, 31.2357], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
       L.control.zoom({ position: 'topright' }).addTo(map);
-
-      // Current location marker
-      const myIcon = L.divIcon({
-        html: '<div style="width:20px;height:20px;background:var(--primary);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3)"></div>',
-        className: '', iconSize: [20, 20], iconAnchor: [10, 10]
-      });
+      const myIcon = L.divIcon({ html: '<div style="width:20px;height:20px;background:var(--primary);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3)"></div>', className: '', iconSize: [20, 20], iconAnchor: [10, 10] });
       L.marker([30.0444, 31.2357], { icon: myIcon }).addTo(map);
-
-      // Some fake driver markers
-      const driverIcon = L.divIcon({
-        html: '<div style="font-size:24px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))">🚐</div>',
-        className: '', iconSize: [30, 30], iconAnchor: [15, 15]
-      });
+      const driverIcon = L.divIcon({ html: '<div style="font-size:24px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))">🚐</div>', className: '', iconSize: [30, 30], iconAnchor: [15, 15] });
       L.marker([30.0500, 31.2400], { icon: driverIcon }).addTo(map);
       L.marker([30.0380, 31.2300], { icon: driverIcon }).addTo(map);
       L.marker([30.0480, 31.2450], { icon: driverIcon }).addTo(map);
-
-      // Try geolocation
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
           map.setView([pos.coords.latitude, pos.coords.longitude], 15);
@@ -1358,7 +1329,6 @@
       if (!dest) { showToast('أدخل وجهتك أولاً'); return; }
       showScreen('trackingScreen');
       initTrackingMap();
-      // Simulate driver arrival
       setTimeout(() => {
         document.getElementById('tripStatusText').textContent = 'السائق وصل!';
         document.getElementById('tripETA').textContent = '📍';
@@ -1371,47 +1341,22 @@
       if (window._trackingMap) return;
       setTimeout(() => {
         const map = L.map('trackingMap').setView([30.0444, 31.2357], 14);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap'
-        }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
         window._trackingMap = map;
-
-        // Route polyline
-        const route = [
-          [30.0444, 31.2357], [30.0460, 31.2380], [30.0480, 31.2400],
-          [30.0500, 31.2420], [30.0520, 31.2450], [30.0540, 31.2480],
-          [30.0560, 31.2500], [30.0580, 31.2510]
-        ];
+        const route = [[30.0444,31.2357],[30.0460,31.2380],[30.0480,31.2400],[30.0500,31.2420],[30.0520,31.2450],[30.0540,31.2480],[30.0560,31.2500],[30.0580,31.2510]];
         L.polyline(route, { color: '#1A6B3C', weight: 5, opacity: 0.8 }).addTo(map);
-
-        // Pickup
-        L.circleMarker([30.0444, 31.2357], { radius: 8, color: '#1A6B3C', fillColor: '#1A6B3C', fillOpacity: 1 }).addTo(map).bindPopup('موقعك');
-        // Dropoff
-        L.circleMarker([30.0580, 31.2510], { radius: 8, color: '#E74C3C', fillColor: '#E74C3C', fillOpacity: 1 }).addTo(map).bindPopup('الوجهة');
-
-        // Driver moving
-        const driverMarker = L.marker([30.0460, 31.2380], {
-          icon: L.divIcon({ html: '<div style="font-size:28px">🚐</div>', className: '', iconSize: [30,30], iconAnchor: [15,15] })
-        }).addTo(map);
+        L.circleMarker([30.0444,31.2357], { radius: 8, color: '#1A6B3C', fillColor: '#1A6B3C', fillOpacity: 1 }).addTo(map).bindPopup('موقعك');
+        L.circleMarker([30.0580,31.2510], { radius: 8, color: '#E74C3C', fillColor: '#E74C3C', fillOpacity: 1 }).addTo(map).bindPopup('الوجهة');
+        const driverMarker = L.marker([30.0460,31.2380], { icon: L.divIcon({ html: '<div style="font-size:28px">🚐</div>', className: '', iconSize: [30,30], iconAnchor: [15,15] }) }).addTo(map);
         let step = 0;
         const driverRoute = [[30.0460,31.2380],[30.0470,31.2385],[30.0475,31.2390],[30.0480,31.2395],[30.0485,31.2400],[30.0490,31.2405],[30.0495,31.2410],[30.0500,31.2420]];
-        const moveInterval = setInterval(() => {
-          if (step < driverRoute.length) {
-            driverMarker.setLatLng(driverRoute[step]);
-            step++;
-          } else {
-            clearInterval(moveInterval);
-          }
-        }, 1500);
+        const moveInterval = setInterval(() => { if (step < driverRoute.length) { driverMarker.setLatLng(driverRoute[step]); step++; } else { clearInterval(moveInterval); } }, 1500);
       }, 300);
     }
 
     function shareTrip() {
-      if (navigator.share) {
-        navigator.share({ title: 'ميكروباصي — مشاركة الرحلة', text: 'تابع رحلتي على ميكروباصي 🚐', url: window.location.href });
-      } else {
-        showToast('تم نسخ رابط الرحلة 📋');
-      }
+      if (navigator.share) { navigator.share({ title: 'ميكروباصي', text: 'تابع رحلتي 🚐', url: window.location.href }); }
+      else { showToast('تم نسخ رابط الرحلة 📋'); }
     }
 
     function callEmergency() { showToast('جاري الاتصال بالنجدة... 🆘'); }
@@ -1422,9 +1367,7 @@
     // ==================== RATING ====================
     function setRating(val) {
       ratingValue = val;
-      document.querySelectorAll('#ratingStars .star').forEach((s, i) => {
-        s.classList.toggle('active', i < val);
-      });
+      document.querySelectorAll('#ratingStars .star').forEach((s, i) => { s.classList.toggle('active', i < val); });
     }
 
     function finishTrip() {
@@ -1437,16 +1380,9 @@
     function showScreen(id) {
       const el = document.getElementById(id);
       if (!el) return;
-
-      // Track history
       const current = document.querySelector('.screen.show');
-      if (current && current.id !== id) {
-        screenHistory.push(current.id);
-      }
-
-      // Hide all screens
+      if (current && current.id !== id) screenHistory.push(current.id);
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
-
       if (id === 'mainApp') {
         document.getElementById('mainApp').classList.add('show');
       } else {
@@ -1459,11 +1395,8 @@
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('show'));
       if (screenHistory.length > 0) {
         const prev = screenHistory.pop();
-        if (prev === 'mainApp') {
-          document.getElementById('mainApp').classList.add('show');
-        } else {
-          document.getElementById(prev).classList.add('show');
-        }
+        if (prev === 'mainApp') { document.getElementById('mainApp').classList.add('show'); }
+        else { document.getElementById(prev).classList.add('show'); }
       } else {
         document.getElementById('mainApp').classList.add('show');
       }
@@ -1474,19 +1407,12 @@
       el.classList.add('active');
     }
 
-    function toggleSheet() {
-      document.getElementById('bottomSheet').classList.toggle('expanded');
-    }
+    function toggleSheet() { document.getElementById('bottomSheet').classList.toggle('expanded'); }
 
     function startVoice() {
-      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        showToast('🎤 جاري الاستماع...');
-      } else {
-        showToast('🎤 التعرف على الصوت غير متاح');
-      }
+      showToast('🎤 جاري الاستماع...');
     }
 
-    // ==================== TOAST ====================
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -1495,9 +1421,7 @@
     }
 
     // ==================== SERVICE WORKER ====================
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    }
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
 
     // ==================== AUTO-LOGIN ====================
     if (localStorage.getItem('mikrobassi_loggedin') === 'true') {
