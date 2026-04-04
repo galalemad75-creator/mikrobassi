@@ -30,6 +30,9 @@
     /* DARK TOGGLE */
     .dark-toggle{position:fixed;top:16px;left:16px;z-index:9998;width:44px;height:44px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;box-shadow:var(--shadow);transition:all .3s}
     .dark-toggle:active{transform:scale(.9)}
+    .riderApp.show .dark-toggle,.driverApp.show .dark-toggle,.adminApp.show .dark-toggle,.app.show ~ .dark-toggle{display:none}
+    body.app-open .dark-toggle{display:none}
+    @media(max-width:480px){.dark-toggle{width:38px;height:38px;font-size:16px;top:12px;left:12px}}
 
     /* SPLASH */
     .splash-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,var(--primary-dark),var(--primary),var(--primary-light));display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s,transform .6s}
@@ -1088,7 +1091,7 @@
 
     document.querySelectorAll('.otp-input').forEach((input,idx,inputs)=>{input.addEventListener('input',e=>{if(e.target.value&&idx<inputs.length-1)inputs[idx+1].focus()});input.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!e.target.value&&idx>0)inputs[idx-1].focus()})});
 
-    function verifyOTP(){isLoggedIn=true;localStorage.setItem('mikrobassi_loggedin','true');localStorage.setItem('mikrobassi_account_type',accountType);document.querySelectorAll('.screen,.app').forEach(s=>s.classList.remove('show'));
+    function verifyOTP(){isLoggedIn=true;localStorage.setItem('mikrobassi_loggedin','true');localStorage.setItem('mikrobassi_account_type',accountType);document.querySelectorAll('.screen,.app').forEach(s=>s.classList.remove('show'));document.body.classList.add('app-open');
       if(accountType==='admin'){document.getElementById('adminApp').classList.add('show')}
       else if(accountType==='driver'){document.getElementById('driverApp').classList.add('show')}
       else{document.getElementById('riderApp').classList.add('show');initMap()}
@@ -1096,7 +1099,7 @@
     }
 
     function socialLogin(p){showToast(`جاري الدخول عبر ${p}...`);setTimeout(()=>verifyOTP(),1500)}
-    function logout(){localStorage.removeItem('mikrobassi_loggedin');localStorage.removeItem('mikrobassi_account_type');isLoggedIn=false;document.querySelectorAll('.app').forEach(a=>a.classList.remove('show'));showScreen('loginScreen')}
+    function logout(){localStorage.removeItem('mikrobassi_loggedin');localStorage.removeItem('mikrobassi_account_type');isLoggedIn=false;document.body.classList.remove('app-open');document.querySelectorAll('.app').forEach(a=>a.classList.remove('show'));showScreen('loginScreen')}
 
     // MAP
     function initMap(){if(window._mapInit)return;window._mapInit=true;const map=L.map('map',{zoomControl:false}).setView([30.0444,31.2357],13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map);L.control.zoom({position:'topright'}).addTo(map);const mi=L.divIcon({html:'<div style="width:20px;height:20px;background:var(--primary);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>',className:'',iconSize:[20,20],iconAnchor:[10,10]});L.marker([30.0444,31.2357],{icon:mi}).addTo(map);const di=L.divIcon({html:'<div style="font-size:24px">🚐</div>',className:'',iconSize:[30,30],iconAnchor:[15,15]});L.marker([30.05,31.24],{icon:di}).addTo(map);L.marker([30.038,31.23],{icon:di}).addTo(map);L.marker([30.048,31.245],{icon:di}).addTo(map)}
@@ -1157,7 +1160,7 @@
     if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
     // AUTO-LOGIN
-    if(localStorage.getItem('mikrobassi_loggedin')==='true'){isLoggedIn=true;accountType=localStorage.getItem('mikrobassi_account_type')||'rider';setTimeout(()=>{document.getElementById('splash').classList.add('hide');if(accountType==='admin')document.getElementById('adminApp').classList.add('show');else if(accountType==='driver')document.getElementById('driverApp').classList.add('show');else{document.getElementById('riderApp').classList.add('show');initMap()}},2200)}
+    if(localStorage.getItem('mikrobassi_loggedin')==='true'){isLoggedIn=true;accountType=localStorage.getItem('mikrobassi_account_type')||'rider';setTimeout(()=>{document.getElementById('splash').classList.add('hide');document.body.classList.add('app-open');if(accountType==='admin')document.getElementById('adminApp').classList.add('show');else if(accountType==='driver')document.getElementById('driverApp').classList.add('show');else{document.getElementById('riderApp').classList.add('show');initMap()}},2200)}
   </script>
 </body>
 </html>
