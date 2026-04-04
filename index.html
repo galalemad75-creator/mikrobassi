@@ -48,14 +48,17 @@
     .onboarding-slides{flex:1;overflow:hidden;position:relative}
     .onboarding-slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;opacity:0;transform:translateX(60px);transition:all .5s}
     .onboarding-slide.active{opacity:1;transform:translateX(0)}
-    .onboarding-icon{font-size:80px;margin-bottom:30px}
-    .onboarding-slide h2{font-size:24px;font-weight:700;text-align:center;margin-bottom:16px;color:var(--primary-dark)}
-    .onboarding-slide p{font-size:15px;text-align:center;color:var(--text2);line-height:1.8}
-    .onboarding-dots{display:flex;gap:8px;justify-content:center;margin:20px 0}
+    .onboarding-icon{font-size:56px;margin-bottom:16px}
+    .onboarding-slide h2{font-size:20px;font-weight:700;text-align:center;margin-bottom:10px;color:var(--primary-dark)}
+    .onboarding-slide p{font-size:14px;text-align:center;color:var(--text2);line-height:1.7;padding:0 10px}
+    .onboarding-slides{flex:1;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
+    .onboarding-slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 30px;opacity:0;transform:translateX(60px);transition:all .5s}
+    .onboarding-slide.active{opacity:1;transform:translateX(0)}
+    .onboarding-dots{display:flex;gap:8px;justify-content:center;margin:12px 0}
     .onboarding-dots span{width:10px;height:10px;border-radius:50%;background:var(--border);transition:all .3s}
     .onboarding-dots span.active{background:var(--primary);width:28px;border-radius:5px}
-    .onboarding-btn{margin:0 30px 40px;padding:16px;background:var(--primary);color:#fff;border:none;border-radius:var(--r);font-family:'Cairo';font-size:16px;font-weight:700;cursor:pointer}
-    .onboarding-skip{position:absolute;top:20px;left:20px;background:none;border:none;color:var(--text2);font-family:'Cairo';font-size:14px;cursor:pointer}
+    .onboarding-btn{margin:0 30px 30px;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--r);font-family:'Cairo';font-size:15px;font-weight:700;cursor:pointer}
+    .onboarding-skip{position:absolute;top:16px;left:20px;background:none;border:none;color:var(--text2);font-family:'Cairo';font-size:14px;cursor:pointer}
 
     /* SCREENS */
     .screen{position:fixed;inset:0;z-index:2000;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
@@ -366,6 +369,7 @@
     .admin-section{padding:0 20px 12px}
 
     .about-float{position:fixed;bottom:90px;left:16px;z-index:999;width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(26,107,60,.4);cursor:pointer}
+    .contact-float{position:fixed;bottom:90px;left:70px;z-index:999;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(243,156,18,.4);cursor:pointer}
     .app-footer{text-align:center;padding:12px 20px 20px;font-size:12px;color:var(--text2)}
     .app-footer a{color:var(--primary);text-decoration:none;font-weight:600}
     .leaflet-control-zoom{left:auto!important;right:10px!important}
@@ -436,6 +440,7 @@
         <button class="social-btn" onclick="socialLogin('facebook')">f</button>
       </div>
       <div class="login-terms">بالتسجيل توافق على <a href="#" onclick="showScreen('termsScreen');return false">الشروط</a> و <a href="#" onclick="showScreen('privacyScreen');return false">الخصوصية</a> و <a href="#" onclick="showScreen('refundScreen');return false">الاسترجاع</a></div>
+      <div class="login-terms" style="margin-top:8px"><a href="#" onclick="showScreen('aboutScreen');return false">من نحن</a> · <a href="#" onclick="showScreen('contactScreen');return false">اتصل بنا</a></div>
     </div>
   </div>
 
@@ -694,6 +699,7 @@
       <button class="nav-item" onclick="showScreen('adminProfileScreen')"><span class="icon">👤</span><span class="label">حسابي</span></button>
     </div>
     <button class="about-float" onclick="showScreen('aboutScreen')">ℹ️</button>
+    <button class="contact-float" onclick="showScreen('contactScreen')">📬</button>
   </div>
 
   <!-- Admin Profile -->
@@ -820,6 +826,7 @@
       <button class="nav-item" onclick="showScreen('driverProfileScreen')"><span class="icon">👤</span><span class="label">حسابي</span></button>
     </div>
     <button class="about-float" onclick="showScreen('aboutScreen')">ℹ️</button>
+    <button class="contact-float" onclick="showScreen('contactScreen')">📬</button>
   </div>
 
   <!-- Driver Profile -->
@@ -900,6 +907,7 @@
       <button class="nav-item" onclick="showScreen('riderProfileScreen')"><span class="icon">👤</span><span class="label">حسابي</span></button>
     </div>
     <button class="about-float" onclick="showScreen('aboutScreen')">ℹ️</button>
+    <button class="contact-float" onclick="showScreen('contactScreen')">📬</button>
   </div>
 
   <!-- Rider Profile -->
