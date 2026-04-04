@@ -435,7 +435,7 @@
         <button class="social-btn" onclick="socialLogin('apple')">🍎</button>
         <button class="social-btn" onclick="socialLogin('facebook')">f</button>
       </div>
-      <div class="login-terms">بالتسجيل توافق على <a href="#" onclick="showScreen('termsScreen');return false">الشروط</a> و <a href="#" onclick="showScreen('privacyScreen');return false">الخصوصية</a></div>
+      <div class="login-terms">بالتسجيل توافق على <a href="#" onclick="showScreen('termsScreen');return false">الشروط</a> و <a href="#" onclick="showScreen('privacyScreen');return false">الخصوصية</a> و <a href="#" onclick="showScreen('refundScreen');return false">الاسترجاع</a></div>
     </div>
   </div>
 
@@ -465,13 +465,103 @@
   <!-- ===== TERMS ===== -->
   <div class="screen" id="termsScreen">
     <div class="screen-header"><button class="back-btn" onclick="goBack()">→</button><h2>شروط الاستخدام</h2></div>
-    <div class="safety-content"><div class="safety-card"><h3>📋 شروط الاستخدام</h3><p><strong>آخر تحديث:</strong> مارس 2026<br><br><strong>1. القبول:</strong> باستخدام التطبيق توافق على الشروط.<br><strong>2. الخدمة:</strong> وسيط بين الراكب والسائق.<br><strong>3. الحساب:</strong> 18 سنة كحد أدنى.<br><strong>4. الأجرة:</strong> حسب المسافة والوقت.<br><strong>5. الإلغاء:</strong> مجاني خلال دقيقتين.<br><strong>6. السلوك:</strong> يُمنع التدخين.<br><strong>7. القانون:</strong> قوانين مصر.</p></div></div>
+    <div style="flex:1;overflow-y:auto;padding:20px">
+      <div class="about-card"><h3>📋 شروط الاستخدام</h3><p>آخر تحديث: أبريل 2026<br><br>باستخدامك لتطبيق ميكروباصي فإنك توافق على هذه الشروط والأحكام.</p></div>
+      <div class="about-card"><h3>1. القبول</h3><p>باستخدام هذا التطبيق فإنك توافق على الالتزام بهذه الشروط. إذا كنت لا توافق، يرجى عدم استخدام التطبيق.</p></div>
+      <div class="about-card"><h3>2. الخدمة</h3><p>ميكروباصي هو وسيط يربط بين الركاب والسائقين. نحن لا نقدم خدمات النقل بأنفسنا بل نوفر المنصة التقنية.</p></div>
+      <div class="about-card"><h3>3. الحساب</h3><p>• الحد الأدنى للعمر 18 سنة<br>• يجب تقديم بيانات صحيحة<br>• أنت مسؤول عن أمان حسابك<br>• يُمنع مشاركة الحساب مع الآخرين</p></div>
+      <div class="about-card"><h3>4. الأجرة والدفع</h3><p>• الأجرة محسوبة حسب المسافة ونوع السيارة<br>• الأسعار معروضة قبل تأكيد الحجز<br>• الدفع بالطريقة المتاحة (نقداً / محفظة إلكترونية)</p></div>
+      <div class="about-card"><h3>5. الإلغاء</h3><p>• إلغاء مجاني خلال أول دقيقتين<br>• بعد ذلك يتم خصم رسوم إلغاء<br>• الإلغاء المتكرر قد يؤدي لتقييد الحساب</p></div>
+      <div class="about-card"><h3>6. السلوك</h3><p>• يُمنع التدخين في السيارة<br>• احترام السائق والركاب الآخرين<br>• عدم حمل مواد خطرة أو محظورة<br>• الالتزام بقواعد المرور</p></div>
+      <div class="about-card"><h3>7. المسؤولية</h3><p>نحن غير مسؤولين عن أي أضرار أو خسائر تحدث أثناء الرحلة. السائق مسؤول عن سلامة الركاب والمركبة.</p></div>
+      <div class="about-card"><h3>8. القانون المعمول به</h3><p>تخضع هذه الشروط لقوانين جمهورية مصر العربية. أي نزاع يتم حله أمام المحاكم المصرية المختصة.</p></div>
+      <div class="about-card">
+        <h3>🔗 روابط ذات صلة</h3>
+        <p style="line-height:2.2">
+          <a href="#" onclick="showScreen('privacyScreen');return false" style="color:var(--primary);margin-left:12px">سياسة الخصوصية</a>
+          <a href="#" onclick="showScreen('refundScreen');return false" style="color:var(--primary);margin-left:12px">سياسة الاسترجاع</a>
+          <a href="#" onclick="showScreen('contactScreen');return false" style="color:var(--primary)">اتصل بنا</a>
+        </p>
+      </div>
+    </div>
   </div>
 
   <!-- ===== PRIVACY ===== -->
   <div class="screen" id="privacyScreen" data-anchor="privacy">
     <div class="screen-header"><button class="back-btn" onclick="goBack()">→</button><h2>سياسة الخصوصية</h2></div>
-    <div class="safety-content"><div class="safety-card"><h3>🔒 سياسة الخصوصية</h3><p>البيانات: رقم الهاتف، الموقع، التقييمات.<br>الحماية: مشفرة عبر Firebase.<br>حقوقك: الوصول، التعديل، الحذف.<br>التواصل: privacy@mikrobassi.com</p></div></div>
+    <div style="flex:1;overflow-y:auto;padding:20px">
+      <div class="about-card"><h3>🔒 مقدمة</h3><p>نحن في تطبيق ميكروباصي نلتزم بحماية خصوصيتك和个人 بياناتك. توضح هذه السياسة كيف نجمع ونستخدم ونحمي معلوماتك عند استخدامك لتطبيقنا.<br><br>آخر تحديث: أبريل 2026</p></div>
+      <div class="about-card"><h3>📱 البيانات التي نجمعها</h3><p><strong>• رقم الهاتف:</strong> للتحقق من الهوية وإنشاء الحساب<br><strong>• الموقع الجغرافي:</strong> لتحديد موقعك أثناء حجز الرحلة وتتبعها<br><strong>• التقييمات:</strong> لتحسين جودة الخدمة<br><strong>• بيانات الاستخدام:</strong> نوع الجهاز ونظام التشغيل</p></div>
+      <div class="about-card"><h3>🛡️ كيف نحمي بياناتك</h3><p>• جميع البيانات مشفرة عبر خوادم Firebase الآمنة<br>• نستخدم بروتوكول HTTPS لجميع الاتصالات<br>• لا نشارك بياناتك مع أي طرف ثالث بدون إذنك<br>• نراجع إجراءات الأمان بشكل دوري</p></div>
+      <div class="about-card"><h3>📊 استخدام البيانات</h3><p>• تقديم وتحسين خدمات النقل<br>• إرسال إشعارات الرحلات والعروض<br>• تحليل الاستخدام لتطوير التطبيق<br>• ضمان سلامة وأمان الركاب والسائقين</p></div>
+      <div class="about-card"><h3>👤 حقوقك</h3><p>• الوصول إلى بياناتك الشخصية<br>• تعديل أو تصحيح بياناتك<br>• حذف حسابك وبياناتك بالكامل<br>• سحب موافقتك على جمع البيانات في أي وقت</p></div>
+      <div class="about-card"><h3>🍪 ملفات تعريف الارتباط</h3><p>يستخدم التطبيق ملفات تعريف الارتباط (Cookies) وتقنيات مشابهة لتحسين تجربتك وتذكر تفضيلاتك. يمكنك إدارة هذه الإعدادات من خلال متصفحك.</p></div>
+      <div class="about-card"><h3>👶 خصوصية الأطفال</h3><p>تطبيقنا غير مخصص للأطفال أقل من 18 سنة. لا نجمع بيانات شخصية عن الأطفال عن علم.</p></div>
+      <div class="about-card"><h3>📢 الإعلانات (Google AdSense)</h3><p>قد نعرض إعلانات عبر Google AdSense. يستخدم Google ملفات تعريف الارتباط لعرض إعلانات بناءً على زياراتك السابقة. يمكنك تعطيل الإعلانات المخصصة من <a href="https://www.google.com/settings/ads" target="_blank" style="color:var(--primary)">إعدادات Google</a>.</p></div>
+      <div class="about-card"><h3>📞 تواصل معنا</h3><p>لأي استفسار حول الخصوصية:<br>📧 privacy@mikrobassi.com<br>📧 emadh5156@gmail.com<br><br>أو من خلال صفحة <a href="#" onclick="showScreen('contactScreen');return false" style="color:var(--primary)">اتصل بنا</a></p></div>
+    </div>
+  </div>
+
+  <!-- ===== REFUND POLICY ===== -->
+  <div class="screen" id="refundScreen">
+    <div class="screen-header"><button class="back-btn" onclick="goBack()">→</button><h2>سياسة الاسترجاع</h2></div>
+    <div style="flex:1;overflow-y:auto;padding:20px">
+      <div class="about-card"><h3>📋 نظرة عامة</h3><p>نحرص في ميكروباصي على رضاك التام. توضح هذه السياسة شروط وإجراءات استرجاع الأموال والإلغاء.<br><br>آخر تحديث: أبريل 2026</p></div>
+      <div class="about-card"><h3>✅ شروط الاسترجاع</h3><p><strong>يمكنك طلب استرجاع في الحالات التالية:</strong><br>• إلغاء الرحلة خلال أول دقيقتين من الحجز (مجاني)<br>• تأخر السائق أكثر من 15 دقيقة عن الموعد المتوقع<br>• إلغاء الرحلة من قبل السائق<br>• مشكلة تقنية أثرت على الرحلة<br>• توقف التطبيق أثناء الرحلة</p></div>
+      <div class="about-card"><h3>⏱️ مهلة الطلب</h3><p><strong>• الرحلات الملغاة:</strong> خلال 24 ساعة من الإلغاء<br><strong>• الرحلات المكتملة بمشكلة:</strong> خلال 48 ساعة من انتهاء الرحلة<br><strong>• الأضرار أو المشاكل:</strong> خلال 7 أيام مع توضيح المشكلة</p></div>
+      <div class="about-card"><h3>💰 طريقة الاسترجاع</h3><p>• يتم إرجاع المبلغ لرصيد المحفظة في التطبيق فوراً<br>• أو لبطاقتك البنكية خلال 5-10 أيام عمل<br>• يتم إخطارك عبر الإشعار عند إتمام الاسترجاع</p></div>
+      <div class="about-card"><h3>❌ غير قابل للاسترجاع</h3><p>• الرحلات المكتملة بنجاح بدون مشاكل<br>• الإلغاء بعد مرور دقيقتين (خصم رسوم إلغاء)<br>• الطلبات المقدمة بعد انتهاء المهلة المحددة</p></div>
+      <div class="about-card"><h3>📞 كيفية الطلب</h3><p>1. اذهب إلى «رحلاتي» في حسابك<br>2. اختر الرحلة المراد إرجاعها<br>3. اضغط «طلب استرجاع» وحدد السبب<br>4. أو تواصل معنا مباشرة عبر <a href="#" onclick="showScreen('contactScreen');return false" style="color:var(--primary)">اتصل بنا</a></p></div>
+      <div class="about-card"><h3>📧 تواصل معنا</h3><p>لأي استفسار عن الاسترجاع:<br>📧 emadh5156@gmail.com<br>أو من خلال صفحة <a href="#" onclick="showScreen('contactScreen');return false" style="color:var(--primary)">اتصل بنا</a></p></div>
+    </div>
+  </div>
+
+  <!-- ===== CONTACT US ===== -->
+  <div class="screen" id="contactScreen">
+    <div class="screen-header"><button class="back-btn" onclick="goBack()">→</button><h2>اتصل بنا</h2></div>
+    <div style="flex:1;overflow-y:auto;padding:20px">
+      <div class="about-card" style="text-align:center;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff">
+        <h3 style="color:#fff">📬 أرسل رسالتك</h3>
+        <p style="color:rgba(255,255,255,.9)">يسعدنا تلقي استفساراتك واقتراحاتك. فريق الدعم متاح للرد خلال 24-48 ساعة.</p>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="about-card">
+          <label style="display:block;font-size:14px;font-weight:700;margin-bottom:8px">👤 الاسم الكامل</label>
+          <input type="text" id="contactName" class="loc-field" placeholder="أدخل اسمك" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Cairo';margin-bottom:16px;background:var(--bg);color:var(--text)">
+          <label style="display:block;font-size:14px;font-weight:700;margin-bottom:8px">📧 البريد الإلكتروني</label>
+          <input type="email" id="contactEmail" class="loc-field" placeholder="example@email.com" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Cairo';margin-bottom:16px;direction:ltr;text-align:left;background:var(--bg);color:var(--text)">
+          <label style="display:block;font-size:14px;font-weight:700;margin-bottom:8px">📋 الموضوع</label>
+          <select id="contactSubject" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Cairo';margin-bottom:16px;background:var(--bg);color:var(--text)">
+            <option value="">اختر الموضوع</option>
+            <option value="استفسار عام">استفسار عام</option>
+            <option value="مشكلة تقنية">مشكلة تقنية</option>
+            <option value="طلب استرجاع">طلب استرجاع</option>
+            <option value="شكوى">شكوى</option>
+            <option value="اقتراح">اقتراح</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+          <label style="display:block;font-size:14px;font-weight:700;margin-bottom:8px">💬 الرسالة</label>
+          <textarea id="contactMessage" rows="5" placeholder="اكتب رسالتك هنا..." style="width:100%;padding:12px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Cairo';resize:vertical;background:var(--bg);color:var(--text)"></textarea>
+        </div>
+        <button class="book-btn" onclick="submitContact()" style="margin-top:12px">📨 إرسال الرسالة</button>
+      </div>
+
+      <div class="about-card" style="margin-top:16px">
+        <h3>📞 طرق تواصل أخرى</h3>
+        <ul>
+          <li style="list-style:none;padding:10px 0;font-size:14px;color:var(--text2)">📧 <a href="mailto:emadh5156@gmail.com" style="color:var(--primary)">emadh5156@gmail.com</a></li>
+          <li style="list-style:none;padding:10px 0;font-size:14px;color:var(--text2)">📧 <a href="mailto:support@mikrobassi.com" style="color:var(--primary)">support@mikrobassi.com</a></li>
+          <li style="list-style:none;padding:10px 0;font-size:14px;color:var(--text2)">📞 +20 2 1234 5678</li>
+          <li style="list-style:none;padding:10px 0;font-size:14px;color:var(--text2)">🕐 السبت — الخميس: 9 صباحاً — 6 مساءً</li>
+        </ul>
+      </div>
+
+      <div class="about-card">
+        <h3>🔗 روابط سريعة</h3>
+        <p><a href="#" onclick="showScreen('privacyScreen');return false" style="color:var(--primary)">سياسة الخصوصية</a> · <a href="#" onclick="showScreen('refundScreen');return false" style="color:var(--primary)">سياسة الاسترجاع</a> · <a href="#" onclick="showScreen('termsScreen');return false" style="color:var(--primary)">شروط الاستخدام</a></p>
+      </div>
+    </div>
   </div>
 
   <!-- ===== SAFETY ===== -->
@@ -489,10 +579,25 @@
     <div style="flex:1;overflow-y:auto">
       <div class="about-hero"><div class="logo">🚐</div><h1>ميكروباصي</h1><div class="ver">الإصدار 1.0.0 • 2026</div></div>
       <div class="about-section">
-        <div class="about-card"><h3>🎯 رسالتنا</h3><p>نوفّر حل نقل ذكي، آمن، وعادل لركاب الفان في مصر.</p></div>
-        <div class="about-card"><h3>✨ ما يميزنا</h3><ul><li>متخصصون في سيارات الفان 7 راكب</li><li>أسعار ثابتة وشفافة</li><li>وضع العائلة</li><li>سائقون موثوقون</li><li>زر طوارئ مباشر</li></ul></div>
-        <div class="about-card"><h3>📊 بالأرقام</h3><ul><li>+10,000 راكب مسجل</li><li>+500 سائق نشط</li><li>+50,000 رحلة مكتملة</li><li>4.8 ⭐ تقييم المستخدمين</li></ul></div>
-        <div class="about-card"><h3>📞 تواصل</h3><ul><li>support@mikrobassi.com</li><li>+20 2 1234 5678</li></ul></div>
+        <div class="about-card"><h3>🎯 رسالتنا</h3><p>نوفّر حل نقل ذكي، آمن، وعادل لركاب الفان في مصر. نسعى لتوفير تجربة نقل مريحة وموثوقة للجميع.</p></div>
+        <div class="about-card"><h3>👁️ رؤيتنا</h3><p>أن نكون المنصة الرائدة في خدمات النقل بالفان في مصر والشرق الأوسط، مع التركيز على الأمان والجودة والأسعار العادلة.</p></div>
+        <div class="about-card"><h3>✨ ما يميزنا</h3><ul><li>متخصصون في سيارات الفان 7 راكب</li><li>أسعار ثابتة وشفافة بدون مفاجآت</li><li>وضع العائلة للرحلات العائلية</li><li>سائقون موثوقون ومتحققون</li><li>زر طوارئ مباشر ومشاركة الرحلة</li><li>تتبع مباشر للرحلة على الخريطة</li></ul></div>
+        <div class="about-card"><h3>📊 بالأرقام</h3><ul><li>+10,000 راكب مسجل</li><li>+500 سائق نشط</li><li>+50,000 رحلة مكتملة</li><li>4.8 ⭐ تقييم المستخدمين</li><li>99.5% رضا العملاء</li></ul></div>
+        <div class="about-card"><h3>🛡️ الأمان أولويتنا</h3><ul><li>تحقق هوية جميع السائقين</li><li>تتبع مباشر للرحلات</li><li>زر طوارئ متصل بالنجدة</li><li>مشاركة الرحلة مع الأهل</li><li>تقييم السائقين بعد كل رحلة</li></ul></div>
+        <div class="about-card"><h3>👨‍💻 فريق التطوير</h3><p>تم تطوير ميكروباصي بواسطة فريق متخصص من المطورين المصريين الشغوفين بتقديم أفضل تجربة نقل رقمية.</p></div>
+        <div class="about-card"><h3>📞 تواصل معنا</h3><ul><li>📧 <a href="mailto:emadh5156@gmail.com" style="color:var(--primary)">emadh5156@gmail.com</a></li><li>📧 <a href="mailto:support@mikrobassi.com" style="color:var(--primary)">support@mikrobassi.com</a></li><li>📞 +20 2 1234 5678</li></ul></div>
+        <div class="about-card">
+          <h3>🔗 روابط مهمة</h3>
+          <p style="line-height:2.2">
+            <a href="#" onclick="showScreen('privacyScreen');return false" style="color:var(--primary);display:inline-block;margin-left:12px">سياسة الخصوصية</a>
+            <a href="#" onclick="showScreen('refundScreen');return false" style="color:var(--primary);display:inline-block;margin-left:12px">سياسة الاسترجاع</a>
+            <a href="#" onclick="showScreen('termsScreen');return false" style="color:var(--primary);display:inline-block;margin-left:12px">شروط الاستخدام</a>
+            <a href="#" onclick="showScreen('contactScreen');return false" style="color:var(--primary);display:inline-block">اتصل بنا</a>
+          </p>
+        </div>
+        <div style="text-align:center;padding:20px;color:var(--text2);font-size:12px">
+          <p>© 2026 ميكروباصي. جميع الحقوق محفوظة.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -606,6 +711,9 @@
         <div class="menu-item" onclick="showToast('إدارة الأسعار')"><div class="menu-icon">💰</div><div class="menu-text">إدارة الأسعار</div><div class="menu-arrow">←</div></div>
         <div class="menu-item" onclick="showToast('الإعدادات')"><div class="menu-icon">⚙️</div><div class="menu-text">إعدادات المنصة</div><div class="menu-arrow">←</div></div>
         <div class="menu-item" onclick="showScreen('aboutScreen')"><div class="menu-icon">🚐</div><div class="menu-text">من نحن</div><div class="menu-arrow">←</div></div>
+        <div class="menu-item" onclick="showScreen('privacyScreen')"><div class="menu-icon">🔒</div><div class="menu-text">سياسة الخصوصية</div><div class="menu-arrow">←</div></div>
+        <div class="menu-item" onclick="showScreen('refundScreen')"><div class="menu-icon">💰</div><div class="menu-text">سياسة الاسترجاع</div><div class="menu-arrow">←</div></div>
+        <div class="menu-item" onclick="showScreen('contactScreen')"><div class="menu-icon">📬</div><div class="menu-text">اتصل بنا</div><div class="menu-arrow">←</div></div>
         <div class="menu-item danger" onclick="logout()"><div class="menu-icon">🚪</div><div class="menu-text">تسجيل الخروج</div><div class="menu-arrow">←</div></div>
       </div>
     </div>
@@ -737,6 +845,9 @@
           <div class="toggle" id="driverDarkToggle" onclick="event.stopPropagation(); toggleDarkMode();"></div>
         </div>
         <div class="menu-item" onclick="showScreen('aboutScreen')"><div class="menu-icon">🚐</div><div class="menu-text">من نحن</div><div class="menu-arrow">←</div></div>
+        <div class="menu-item" onclick="showScreen('privacyScreen')"><div class="menu-icon">🔒</div><div class="menu-text">سياسة الخصوصية</div><div class="menu-arrow">←</div></div>
+        <div class="menu-item" onclick="showScreen('refundScreen')"><div class="menu-icon">💰</div><div class="menu-text">سياسة الاسترجاع</div><div class="menu-arrow">←</div></div>
+        <div class="menu-item" onclick="showScreen('contactScreen')"><div class="menu-icon">📬</div><div class="menu-text">اتصل بنا</div><div class="menu-arrow">←</div></div>
         <div class="menu-item danger" onclick="logout()"><div class="menu-icon">🚪</div><div class="menu-text">تسجيل الخروج</div><div class="menu-arrow">←</div></div>
       </div>
     </div>
@@ -816,6 +927,8 @@
         <div class="menu-item" onclick="showScreen('aboutScreen')"><div class="menu-icon">🚐</div><div class="menu-text">من نحن</div><div class="menu-arrow">←</div></div>
         <div class="menu-item" onclick="showScreen('termsScreen')"><div class="menu-icon">📋</div><div class="menu-text">شروط الاستخدام</div><div class="menu-arrow">←</div></div>
         <div class="menu-item" onclick="showScreen('privacyScreen')"><div class="menu-icon">🔒</div><div class="menu-text">سياسة الخصوصية</div><div class="menu-arrow">←</div></div>
+        <div class="menu-item" onclick="showScreen('refundScreen')"><div class="menu-icon">💰</div><div class="menu-text">سياسة الاسترجاع</div><div class="menu-arrow">←</div></div>
+        <div class="menu-item" onclick="showScreen('contactScreen')"><div class="menu-icon">📬</div><div class="menu-text">اتصل بنا</div><div class="menu-arrow">←</div></div>
         <div class="menu-item danger" onclick="logout()"><div class="menu-icon">🚪</div><div class="menu-text">تسجيل الخروج</div><div class="menu-arrow">←</div></div>
       </div>
     </div>
@@ -1010,6 +1123,27 @@
     function goBack(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('show'));if(screenHistory.length>0){const p=screenHistory.pop();document.getElementById(p)?.classList.add('show')}}
     function toggleSheet(){document.getElementById('bottomSheet').classList.toggle('expanded')}
     function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+    // CONTACT FORM
+    function submitContact(){
+      const name=document.getElementById('contactName').value.trim();
+      const email=document.getElementById('contactEmail').value.trim();
+      const subject=document.getElementById('contactSubject').value;
+      const message=document.getElementById('contactMessage').value.trim();
+      if(!name||!email||!subject||!message){showToast('⚠️ يرجى ملء جميع الحقول');return}
+      // Save to localStorage
+      const contacts=JSON.parse(localStorage.getItem('mikrobassi_contacts')||'[]');
+      contacts.push({name,email,subject,message,date:new Date().toISOString()});
+      localStorage.setItem('mikrobassi_contacts',JSON.stringify(contacts));
+      // Build mailto
+      const body=encodeURIComponent('الاسم: '+name+'\nالبريد: '+email+'\nالموضوع: '+subject+'\n\nالرسالة:\n'+message);
+      window.location.href='mailto:emadh5156@gmail.com?subject='+encodeURIComponent('[ميكروباصي] '+subject)+'&body='+body;
+      showToast('✅ تم إرسال رسالتك بنجاح!');
+      document.getElementById('contactName').value='';
+      document.getElementById('contactEmail').value='';
+      document.getElementById('contactSubject').value='';
+      document.getElementById('contactMessage').value='';
+    }
 
     // SERVICE WORKER
     if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
