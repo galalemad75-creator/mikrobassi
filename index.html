@@ -1162,5 +1162,7 @@
     // AUTO-LOGIN
     if(localStorage.getItem('mikrobassi_loggedin')==='true'){isLoggedIn=true;accountType=localStorage.getItem('mikrobassi_account_type')||'rider';setTimeout(()=>{document.getElementById('splash').classList.add('hide');document.body.classList.add('app-open');if(accountType==='admin')document.getElementById('adminApp').classList.add('show');else if(accountType==='driver')document.getElementById('driverApp').classList.add('show');else{document.getElementById('riderApp').classList.add('show');initMap()}},2200)}
   </script>
+<script src="config.js"></script>
+<script src="supabase-sync.js"></script>
 </body>
 </html>
